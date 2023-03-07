@@ -1,3 +1,13 @@
+<?php
+
+    if(isset($_POST["submit"])){
+        echo basename($_FILES["image1"]['name']);
+        echo '<br>';
+        print_r($_FILES['image1']);
+    }
+
+    // move_uploaded_file($)
+?>
 
 
 <!DOCTYPE html>
@@ -9,34 +19,11 @@
     <title>Document</title>
 </head>
 <body>
-
     <h1>welcome to php</h1>
-    <?php
-
-        
-        $arr = ["name" => "denish", "age" => "21", "height" => "172cm", "weight" => "60kg", "college" => "DEPSTAR", "university" => "CHARUSAT"];
-        print_r(count($arr));
-        $arr1 = array_chunk($arr,2,true);
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        print_r($arr);
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        print_r($arr1[0]["name"]);
-        $arr2 = [1,2,3,4,5,6];
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        $arr3 = array_combine($arr,$arr2);
-        print_r($arr3);
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        print_r(array_flip($arr3));
-
-    ?>
+    <form action="<?php echo html_entity_decode($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
+        <input type="file" name="image1" id="file">
+        <input type="submit" value="Submit" name="submit">
+    </form>
 
 </body>
 </html>

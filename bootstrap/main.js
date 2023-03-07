@@ -2,7 +2,34 @@ var checkArr = ["credit", "debit", "upi"];
 var checknum = [];
 var imgArr = [];
 $(document).ready(function () {
+
+    $('#mytable').DataTable({
+        "language": {
+            "emptyTable": "No data available"
+        },
+        "processing": true,
+        "serverSide": true,
+        "ajax": "fetchdata.php",
+        "columns": [
+            { "data": "id" },
+            { "data": "name" },
+            { "data": "phone" },
+            { "data": "email" },
+            { "data": "gender" },
+            { "data": "image" },
+            { "data": "paymentmethod" },
+            { "data": "country" },
+            { "data": "state" },
+            { "data": "action"}
+        ]
+    });
+
+    function removeError() {
+        $("#" + $(this)[0].id + "Error").html(" ");
+    }
+
     $(".cardDetails").change(function () {
+        $("#paymentError").html(" ");
         if ($(this).is(":checked")) {
             let className = $(this)[0].value;
             console.log(checkArr.indexOf(className));
@@ -20,6 +47,7 @@ $(document).ready(function () {
             $("." + className).addClass("none");
         }
         console.log(checknum);
+        $(".cardDetails").value = checknum;
     });
 
     $(":input").focus(function () {
@@ -32,6 +60,8 @@ $(document).ready(function () {
 
     $("#image").change(function () {
         let len = this.files.length;
+        $("#" + $(this)[0].id + "Error").html(" ");
+        $(".imageContainer").empty();
         for (let i = 0; i < len; i++) {
             let img = "<img src='#' alt='#' id='showimg" + (i + 1) + "' >";
             $(".imageContainer").append(img);
@@ -49,7 +79,7 @@ $(document).ready(function () {
 
     $("#country").change(function () {
         let countryname = $("#country option:selected").val();
-        console.log(countryname);
+        $("#" + $(this)[0].id + "Error").html("");
         $.ajax({
             method: "POST",
             url: "../getstate.php",
@@ -183,13 +213,26 @@ $(document).ready(function () {
     // });
 
 
+    $("#name").keypress(removeError);
+    $("#phone").keyup(removeError);
+    $("#email").keyup(removeError);
+    $("#password").keyup(removeError);
+    $("#state").change(removeError);
+    $("#cname").keyup(removeError);
+    $("#cnumber").keyup(removeError);
+    $("#dname").keyup(removeError);
+    $("#dnumber").keyup(removeError);
+    $("#uname").keyup(removeError);
+    $("#uid").keyup(removeError);
+    $(".gender").change(function() {
+        $("#genderError").html(" ");
+    });
 })
 
 
-// $("#form").submit(function (event) {
-function checkdata() {
+$("#form").submit(function (event) {
+    var validationFailed = false;
 
-    // event.preventDefault();
     var name = $("#name").val().trim().toLowerCase();
     var phone = $("#phone").val().trim();
     var email = $("#email").val().trim().toLowerCase();
@@ -203,22 +246,27 @@ function checkdata() {
     console.log(img.length);
     if (payment.length < 1) {
         $("#paymentError").html("Please select a payment method");
+        validationFailed = true;
     }
 
     if (img.length < 1) {
         $("#imageError").html("Please select images");
+        validationFailed = true;
     }
 
     if (gender == null) {
         $("#genderError").html("Please select your gender");
+        validationFailed = true;
     }
 
     if (country == null) {
         $("#countryError").html("Please select your country");
+        validationFailed = true;
     }
 
     if (state == null) {
         $("#stateError").html("Please select your state");
+        validationFailed = true;
     }
 
     let data = {
@@ -231,13 +279,13 @@ function checkdata() {
     let globalRegex = {
         rules: {
             name: /^[a-zA-Z\s]{4,}$/,
-            phone: /^[0-9]{10}$/,
+            phone: /^[0-9]{10,}$/,
             email: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
             password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
         },
         message: {
             name: 'Enter valid Name (Minimum length should be grater than 4)',
-            phone: 'Enter valid Phone Number (Minimum length should be grater than 10)',
+            phone: 'Enter valid Phone Number',
             email: 'Enter valid Email (Minimum length should be grater than 6)',
             password: 'Enter valid Password (Should contain at least one special character, number and upper case letters)'
         }
@@ -269,19 +317,24 @@ function checkdata() {
         data.uname = uname;
         data.uid = uid;
         globalRegex.rules.uname = /^[a-zA-Z\s]{4,}$/;
-        globalRegex.rules.uid = /^[0-9]{10,}$/;
+        globalRegex.rules.uid = /^[0-9A-Za-z.-]{2,30}@[a-zA-Z]{2,10}$/;
         globalRegex.message.uname = 'Enter valid Name (Minimum length should be grater than 4)';
-        globalRegex.message.uid = 'Enter valid Phone Number (Minimum length should be grater than 10)';
+        globalRegex.message.uid = 'Enter valid UPI ID';
     };
 
     for (attribute in data) {
-        console.log(data[attribute]);
         if (!data[attribute].match(globalRegex.rules[attribute])) {
             $("#" + attribute + "Error").html(globalRegex.message[attribute]);
+            validationFailed = true;
         }
     }
 
-    // form.submit;
-    // form.reset();
+    if (validationFailed) {
+        event.preventDefault();
+        return false;
+    }
 
-}
+    //$("#form").submit();
+    //$("#form").reset();
+
+})

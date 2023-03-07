@@ -1,4 +1,4 @@
-.error-validate{
+.error-validate {
     color: red;
 }
 
@@ -22,4 +22,14 @@
 
 .focus-input {
     border: 4px solid lightblue;
+}
+
+.action-btn a {
+    color: white !important;
+    text-decoration: none;
+}
+
+.table-image {
+    /* width:100px !important; */
+    height:100px !important;
 }

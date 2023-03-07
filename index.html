@@ -6,18 +6,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sure</title>
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css"> <!--css/bootstrap.min.css-->
+    <link rel="stylesheet" href="/bootstrap/css/datatable.css">
     <link rel="stylesheet" href="/bootstrap/style.css">
     <link rel="stylesheet" href="/font-awesome/css/fontawesome.min.css">
 </head>
 
 <body>
-    <div class="container p-5"> 
+    <div class="container p-5">
         <div class="formTitle text-center">
             <h1>Form</h1>
         </div>
         <div class="formBody text-center">
-            <form id="form" method="post" enctype="multipart/form-data"> <!--action="/storeData.php"-->
+            <form id="form" action="storeData.php" method="post" enctype="multipart/form-data">
                 <!-- name -->
                 <div class="form-group">
                     <label for="name" id="nameLabel" class="col-2 text-start">Name</label>
@@ -107,17 +108,17 @@
                     <label for="payment" id="paymentLabel" class="col-2 text-start">Payment Information</label>
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex">
-                            <input type="checkbox" name="payment" id="credit" value="credit" class=" cardDetails">
+                            <input type="checkbox" name="payment1" id="credit" value="credit" class="cardDetails">
                             <label for="credit" class=" text-start ms-2">Credit card</label>
                         </div>
 
                         <div class="d-flex">
-                            <input type="checkbox" name="payment" id="debit" value="debit" class="cardDetails">
+                            <input type="checkbox" name="payment2" id="debit" value="debit" class="cardDetails">
                             <label for="debit" class=" text-start ms-2">Debit card</label>
                         </div>
 
                         <div class="d-flex">
-                            <input type="checkbox" name="payment" id="upi" value="upi" class="cardDetails">
+                            <input type="checkbox" name="payment3" id="upi" value="upi" class="cardDetails">
                             <label for="upi" class=" text-start ms-2">UPI</label>
                         </div>
                     </div>
@@ -209,19 +210,74 @@
 
                 <!-- submit -->
                 <div class="form-group">
-                    <input type="button" id="submit" class="col-8" onclick="checkdata()" value="SUBMIT">
+                    <!-- <input type="button" id="submit" class="col-8" onclick="checkdata()" value="SUBMIT"> -->
+                    <input type="submit" name="submit" id="submit" class="col-8">
                     <!-- <div onclick="checkdata()"> dfghjk</div>     -->
                 </div>
             </form>
         </div>
     </div>
 
+    <div class="table">
+        <table id="mytable" class="display">
+            <thead>
+                <tr>
+                    <th>
+                        Id
+                    </th>
+
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Phone Number
+                    </th>
+
+                    <th>
+                        Email
+                    </th>
+
+                    <th>
+                        Gender
+                    </th>
+
+                    <th>
+                        Image
+                    </th>
+
+                    <th>
+                        Payment Methods
+                    </th>
+
+                    <th>
+                        Country
+                    </th>
+
+                    <th>
+                        State
+                    </th>
+
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+
+            </thead>
+
+            <tbody id="tbody">
+
+            </tbody>
+        </table>
+    </div>
+
 </body>
-<script src="/bootstrap/js/popper.min.js"></script>
+<script src="/bootstrap/js/popper.min.js"></script> <!--bootstrap/js/popper.min.js-->
 <script src="/bootstrap/js/jquery-3.6.3.min.js"></script>
 <script src="/bootstrap/js/bootstrap.min.js"></script>
 <script src="/bootstrap/js/jquery-validate.min.js"></script>
 <script src="/font-awesome/js/fontawesome.min.js"></script>
+<script src="/bootstrap/js/datatable.js"></script>
 <script src="/bootstrap/main.js"></script>
 
 </html>
