@@ -1,3 +1,30 @@
+<?php
+    session_start();
+    $_SESSION["flag"] = 0;
+    require("config.php");
+    if(isset($_GET["id"])) {   
+        $_SESSION['flag'] = 1;
+        $id = $_GET["id"];
+        $sql = "select * from customers where id = $id";
+        $dataArray = array();
+        $result = $conn->query($sql);
+        if($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $name = $row['name'];
+                $phone = $row['phone'];
+                $email = $row['email'];
+                $password = $row['password'];
+                $country = $row['country'];
+                $state = $row['state'];
+                $gender = $row['gender'];
+                $images[] = explode(",", $row['image']);
+                $imglen = count($image);
+                $paymentmethod[] = explode($row['paymentmethod']);
+                $paymentinfo[] = unserialize($row['paymentinfo']);
+                // $dataArray += array("name" => $name, "phone" => $phone, "email" => $email, );
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,28 +49,28 @@
                 <!-- name -->
                 <div class="form-group">
                     <label for="name" id="nameLabel" class="col-2 text-start">Name</label>
-                    <input type="text" name="name" id="name" class="col-4">
+                    <input type="text" name="name" id="name" class="col-4" value="<?php echo $name?>">
                 </div>
                 <span id="nameError" class="error-validate"></span>
 
                 <!-- phone -->
                 <div class="form-group">
                     <label for="phone" id="phoneLabel" class="col-2 text-start">Phone Number</label>
-                    <input type="number" name="phone" id="phone" class="col-4">
+                    <input type="number" name="phone" id="phone" class="col-4" value="<?php echo $phone?>">
                 </div>
                 <span id="phoneError" class="error-validate"></span>
 
                 <!-- email -->
                 <div class="form-group">
                     <label for="email" id="emailLabel" class="col-2 text-start">Email</label>
-                    <input type="email" name="email" id="email" class="col-4">
+                    <input type="email" name="email" id="email" class="col-4" value="<?php echo $email?>">
                 </div>
                 <span id="emailError" class="error-validate"></span>
 
                 <!--  enter password -->
                 <div class="form-group">
                     <label for="password" id="passwordLabel" class="col-2 text-start">Enter Password</label>
-                    <input type="password" name="password" id="password" class="col-4">
+                    <input type="password" name="password" id="password" class="col-4" value="<?php echo $name?>">
                 </div>
                 <span id="passwordError" class="error-validate"></span>
 
@@ -59,17 +86,17 @@
                     <label for="gender" id="genderLabel" class="col-2 text-start">Gender</label>
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex">
-                            <input type="radio" name="gender" id="male" value="male" class="gender">
+                            <input type="radio" name="gender" id="male" value="male" class="gender" <?php if($gender == "male") echo " checked";?>>
                             <label for="male" class="col-2 text-start ms-2">Male</label>
                         </div>
 
                         <div class="d-flex">
-                            <input type="radio" name="gender" id="female" value="female" class="gender">
+                            <input type="radio" name="gender" id="female" value="female" class="gender" <?php if($gender == "female") echo " checked";?>>
                             <label for="female" class="col-2 text-start ms-2">Female</label>
                         </div>
 
                         <div class="d-flex">
-                            <input type="radio" name="gender" id="other" value="other" class="gender">
+                            <input type="radio" name="gender" id="other" value="other" class="gender" <?php if($gender == "other") echo " checked";?>>
                             <label for="other" class="col-2 text-start ms-2">Other</label>
                         </div>
                     </div>
@@ -84,7 +111,13 @@
                 </div>
                 <span id="imageError" class="error-validate"></span>
                 <div class="imageContainer">
-
+                    <?php 
+                        $i = 1;
+                        foreach($images as $img) {
+                            echo "<img src='images/$img' alt='retrivedImage' id='showimg$i' class='show-im'>";
+                            $i++;
+                        }
+                    ?>
                 </div>
                 <!-- <img src="#" alt="image1"> -->
 
@@ -108,17 +141,17 @@
                     <label for="payment" id="paymentLabel" class="col-2 text-start">Payment Information</label>
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex">
-                            <input type="checkbox" name="payment1" id="credit" value="credit" class="cardDetails">
+                            <input type="checkbox" name="payment1" id="credit" value="credit" class="cardDetails" <?php if(in_array("credit", $paymentmethod)) echo ' checked';?>>
                             <label for="credit" class=" text-start ms-2">Credit card</label>
                         </div>
 
                         <div class="d-flex">
-                            <input type="checkbox" name="payment2" id="debit" value="debit" class="cardDetails">
+                            <input type="checkbox" name="payment2" id="debit" value="debit" class="cardDetails" <?php if(in_array("debit", $paymentmethod)) echo ' checked'; ?>>
                             <label for="debit" class=" text-start ms-2">Debit card</label>
                         </div>
 
                         <div class="d-flex">
-                            <input type="checkbox" name="payment3" id="upi" value="upi" class="cardDetails">
+                            <input type="checkbox" name="payment3" id="upi" value="upi" class="cardDetails" <?php if(in_array("upi", $paymentmethod)) echo ' checked'; ?>>
                             <label for="upi" class=" text-start ms-2">UPI</label>
                         </div>
                     </div>
@@ -127,7 +160,7 @@
                 <!-- payment-interface -->
                 <div class="paymentInterface">
                     <!-- credit card -->
-                    <div class="credit text-center none">
+                    <div class="credit text-center none" <?php if(in_array("credit", $paymentmethod)) echo ' style="display:block"';?>>
                         <h3>Credit Card</h3>
                         <!-- creditname -->
                         <div class="form-group">
@@ -145,7 +178,7 @@
                     </div>
 
                     <!-- debit card -->
-                    <div class="debit text-center none">
+                    <div class="debit text-center none" <?php if(in_array("debit", $paymentmethod)) echo ' style="display:block"';?>>
                         <h3>Debit Card</h3>
                         <!-- debitname -->
                         <div class="form-group">
@@ -164,7 +197,7 @@
 
 
                     <!-- upi -->
-                    <div class="upi text-center none">
+                    <div class="upi text-center none" <?php if(in_array("upi", $paymentmethod)) echo ' style="display:block"';?>>
                         <h3>UPI</h3>
                         <!-- upiname -->
                         <div class="form-group">
@@ -281,3 +314,9 @@
 <script src="/bootstrap/main.js"></script>
 
 </html>
+
+<?php
+}
+}
+}
+?>
