@@ -16,11 +16,21 @@ $(document).ready(function () {
             { "data": "phone" },
             { "data": "email" },
             { "data": "gender" },
-            { "data": "image" },
+            {
+                "mData": "image",
+                "mRender": function (data, type, full) {
+                    return "<img src='../images/" + data + "' alt='userImage' class='table-image'>";
+                }
+            },
             { "data": "paymentmethod" },
             { "data": "country" },
             { "data": "state" },
-            { "data": "action"}
+            {
+                "mData": "action",
+                "mRender": function (data, type, full) {
+                    return "<button class='btn-danger action-btn' id='" + data + "' ><a href='delete.php?id=" + data + "'>Delete</a></button> <button class='btn-primary ms-2 action-btn' id='" + data + "' ><a href='update.php?id=" + data + "'>Update</a></button>";
+                }
+            }
         ]
     });
 
@@ -224,7 +234,7 @@ $(document).ready(function () {
     $("#dnumber").keyup(removeError);
     $("#uname").keyup(removeError);
     $("#uid").keyup(removeError);
-    $(".gender").change(function() {
+    $(".gender").change(function () {
         $("#genderError").html(" ");
     });
 })

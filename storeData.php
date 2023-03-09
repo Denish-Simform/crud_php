@@ -11,10 +11,20 @@
         $state = $_POST["state"];
         $gender = $_POST["gender"];
         $img_num = count($_FILES["image"]["name"]);
+        // echo "<br>";
+        // echo "<br>";
+        // echo $img_num;
+        // echo "<br>";
+        // echo "<br>";
         $img_arr = array($img_num);
         for($i = 0; $i < $img_num; $i++) {
             $img_arr[$i] = $_FILES["image"]["name"][$i];
-            $temp_name = $_FILES["image"]["temp_name"][$i];
+            $temp_name = $_FILES["image"]["tmp_name"][$i];
+            // echo "<br>";
+            // echo "<br>";
+            // echo $temp_name;
+            // echo "<br>";
+            // echo "<br>";
                 if(move_uploaded_file($_FILES["image"]["tmp_name"][$i], $dirName . basename($_FILES["image"]["name"][$i]))) {
                     echo $_FILES["image"]["name"][$i];
                     chmod($dirName . basename($_FILES["image"]["name"][$i]), 0777);
@@ -23,7 +33,14 @@
                     echo "File is not Uploaded";            
                 }           
         }
+        // echo "<br>";
+        // echo "<br>";
+        // var_dump($img_arr);
+        // echo "<br>";
+        // echo "<br>";
+
         $image = implode(",", $img_arr);
+        
 
         $paymentMethod = array();
         if(isset($_POST["payment1"])) {
@@ -47,12 +64,17 @@
                 $paymentDetails += array("upi"=>array("uname"=>$_POST["uname"], "uid"=>$_POST["uid"]));
             }
         }
-        $paymentInfo = $paymentDetails;
+        $paymentInfo = serialize($paymentDetails);
+        
         $paymentOption = implode(",",$paymentMethod);
-        $sql = "insert into customers (name, phone, email, password, gender, image, paymentmethod, paymentinfo, country, state) value ('$name', $phone, '$email', '$password', '$gender', '$image','$paymentOption', '$paymentDetails', '$country', '$state') ";
+        $sql = "insert into customers (name, phone, email, password, gender, image, paymentmethod, paymentinfo, country, state) value ('$name', $phone, '$email', '$password', '$gender', '$image','$paymentOption', '$paymentInfo', '$country', '$state') ";
     
         if($conn->query($sql) === TRUE){
             header("Location:index.html");
+        //     echo serialize($paymentDetails);
+        // echo "<br>";
+        // echo "<br>";
+        // print($paymentInfo);
         } else {
             echo $conn->error;
         }
