@@ -28,7 +28,7 @@ $(document).ready(function () {
             {
                 "mData": "action",
                 "mRender": function (data, type, full) {
-                    return "<button class='btn-danger action-btn' id='" + data + "' onclick='confirmDelete("+data+")'>Delete</button><button class='btn-primary ms-2 action-btn' id='" + data + "' ><a href='update.php?id=" + data + "'>Update</a></button>";
+                    return "<button class='btn-danger action-btn' id='" + data + "' onclick='confirmDelete("+data+")'>Delete</button><button class='btn-primary ms-2 action-btn' id='" + data + "' ><a href='index.php?id=" + data + "'>Update</a></button>";
                 }
             }
         ]
@@ -101,7 +101,7 @@ $(document).ready(function () {
             }
         });
     });
-    
+     
     $("#cnfpassword").keyup(function () {
         var password = $("#password").val().trim();
         var cnfpassword = $("#cnfpassword").val().trim();
@@ -243,7 +243,7 @@ $(document).ready(function () {
     
 $("#form").submit(function (event) {
     var validationFailed = false;
-    
+    var update = $("#update").val();
     var name = $("#name").val().trim().toLowerCase();
     var phone = $("#phone").val().trim();
     var email = $("#email").val().trim().toLowerCase();
@@ -355,7 +355,7 @@ function confirmDelete(id) {
     if(result == true) {
         $.ajax({
             type: "GET",
-            url: "../delete.php",
+            url: "../action.php",
             data: { "id": id },
             success: function () {
                 window.location.reload();

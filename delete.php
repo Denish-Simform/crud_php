@@ -15,10 +15,10 @@
                 foreach($imgArr as $img) {
                     if(file_exists("images/$img")) {
                         unlink("images/$img");
-                        header("Location:index.html");
                         echo "Record Deleted Successfully";
                     }
                 }
+                header("Refresh:0; Location:index.php");
             } else {
                 echo "Error deleting record: " . $conn->error;
             }
