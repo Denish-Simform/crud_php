@@ -19,7 +19,7 @@ $(document).ready(function () {
             {
                 "mData": "image",
                 "mRender": function (data, type, full) {
-                    return "<img src='../images/" + data + "' alt='userImage' class='table-image'>";
+                    return "<img src='images/" + data + "' alt='userImage' class='table-image'>";
                 }
             },
             { "data": "paymentmethod" },
@@ -38,6 +38,30 @@ $(document).ready(function () {
     function removeError() {
         $("#" + $(this)[0].id + "Error").html(" ");
     }
+    
+    // update 
+        if($("input.cardDetails:checked")) {
+            let className = $("input.cardDetails:checked").val();
+            console.log(className);
+            console.log(checkArr.indexOf(className));
+            if(className != undefined) {
+                checknum.push(className);
+            }
+            $("." + className).removeClass("none");
+        } else if (!$("input.cardDetails:checked")) {
+            let className = $(this)[0].value;
+            console.log(typeof (className));
+            if (checknum.includes(className)) {
+                let i = checknum.indexOf(className);
+                console.log(i);
+                checknum.splice(i, 1);
+                console.log(checknum);
+            }
+            $("." + className).addClass("none");
+        }
+    
+        console.log(checknum);
+        $(".cardDetails").value = checknum;
     
     $(".cardDetails").change(function () {
         $("#paymentError").html(" ");
@@ -93,7 +117,7 @@ $(document).ready(function () {
         $("#" + $(this)[0].id + "Error").html("");
         $.ajax({
             method: "POST",
-            url: "../getstate.php",
+            url: "getstate.php",
             datatype: "json",
             data: { data: countryname },
             success: function (data) {

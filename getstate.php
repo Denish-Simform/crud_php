@@ -1,8 +1,8 @@
 <?php 
     require("config.php");
-    if(isset($_REQUEST["POST_METHOD"])){
+    // if(isset($_REQUEST["POST_METHOD"])){
         
-    }
+    // }
     if(!empty($_POST['data'])) {
         $country = $_POST['data'];
         $sql = "select s_name from states where c_name = \"".$country . "\"";     
