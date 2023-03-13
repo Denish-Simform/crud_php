@@ -80,14 +80,14 @@
                 <!--  enter password -->
                 <div class="form-group " >
                     <label for="password" id="passwordLabel" class="col-2 text-start ">Enter Password</label>
-                    <input type="password" name="password" id="password" class="col-4 " >
-                    <span id="passwordError" class="error-validate "></span>
+                    <input type="password" name="password" id="password" class="col-4 " <?php if(isset($id)) echo "disabled";?>>
                 </div>
+                <span id="passwordError" class="error-validate "></span>
 
                 <!-- confirm password -->
                 <div class="form-group ">
                     <label for="cnfpassword" id="cnfpasswordLabel" class="col-2 text-start">Confirm Password</label>
-                    <input type="password" name="cnfpassword" id="cnfpassword" class="col-4" >
+                    <input type="password" name="cnfpassword" id="cnfpassword" class="col-4" <?php if(isset($id)) echo "disabled";?>>
                 </div>
                 <span id="cnfpasswordError" class="error-validate"></span>
 
@@ -130,22 +130,6 @@
                     }
                     ?>
                 </div>
-                <!-- <img src="#" alt="image1"> -->
-
-                <!-- hobbies -->
-                <!-- <div class="form-group d-flex justify-content-center">
-                    <label for="hobby" id="hobbyLabel" class="col-2 text-start">Hobbies </label>
-                    <div class="col-4 d-flex justify-content-start">
-                        <select name="hobby[]" id="hobby" class=" select" multiple  >
-                            <option value="" selected disabled>-Select Hobby-</option>
-                            <option value="draw">Drawing</option>
-                            <option value="dance">Dance</option>
-                            <option value="instrument">Instrument Playing</option>
-                            <option value="read">Reading</option>
-                        </select>
-                    </div>
-                    <span id="hobbyError" class="error-validate"></span>
-                </div> -->
 
                 <!-- checkbox -->
                 <div class="form-group d-flex justify-content-center">
@@ -273,10 +257,10 @@
 
                 <!-- submit -->
                 <div class="form-group">
-                    <!-- <input type="button" id="submit" class="col-8" onclick="checkdata()" value="SUBMIT"> -->
-                    <input type="submit" name="submit" id="submit" class="col-8">
-                    <!-- <div onclick="checkdata()"> dfghjk</div>-->
+                    <input type="submit" name="submit" id="submit" class="col-3">
+                    <input type="reset" name="reset" id="reset" class="col-3">
                 </div>
+
             </form>
         </div>
     </div>

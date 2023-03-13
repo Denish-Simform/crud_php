@@ -1,7 +1,7 @@
 <?php
     require("config.php");
     $dirName = "images/";
-    if(isset($_POST["submit"]) && $_POST["update"] == "") {
+    if(isset($_POST["submit"]) && $_POST["update"] == "") { //For Insert data
         $name = $_POST["name"];
         $phone = $_POST["phone"];
         $email = $_POST["email"];
@@ -54,7 +54,7 @@
         $sql = "insert into customers (name, phone, email, password, gender, image, paymentmethod, paymentinfo, country, state) value ('$name', $phone, '$email', '$password', '$gender', '$image','$paymentOption', '$paymentInfo', '$country', '$state') ";
     
         if($conn->query($sql) === TRUE){
-            header("Refresh:0; Location:index.php");
+            header("Location:index.php");
         } else {
             echo $conn->error;
         }
@@ -76,15 +76,13 @@
                         echo "Record Deleted Successfully";
                     }
                 }
-                header("Refresh:0; Location:index.php");
+                header("Location:index.php");
             } else {
                 echo "Error deleting record: " . $conn->error;
             }
         }
 
-    } else {  // For UPDATE 
-
-        if($_FILES["image"] == null) {  // UPDATING data without images
+    } elseif($_POST["submit"] && count(array_filter($_FILES["image"]["name"])) < 1) {  // UPDATING data without images
             $id = $_POST["update"];
             $name = $_POST["name"];
             $phone = $_POST["phone"];
@@ -118,10 +116,10 @@
             
             $paymentOption = implode(",",$paymentMethod);
 
-            $updateWithoutImage = "update customers set name = '$name', phone = $phone, email = '$email', paymentmethod = '$payementOption', paymentinfo = '$paymentInfo', gender = '$gender', country = '$country', state = '$state' where id = $id";
+            $updateWithoutImage = "update customers set name = '$name', phone = $phone, email = '$email', paymentmethod = '$paymentOption', paymentinfo = '$paymentInfo', gender = '$gender', country = '$country', state = '$state' where id = $id";
 
             if($conn->query($updateWithoutImage) === TRUE) {
-                header("Refresh:0; Location:index.php");
+                header("Location:index.php");
             } else {
                 echo $conn->error;
             }
@@ -143,7 +141,7 @@
                         chmod($dirName . basename($_FILES["image"]["name"][$i]), 0777);
                         continue;
                     } else {
-                        die("File is not Uploaded");            
+                        die("File is not Uploaded ");            
                     }           
             }
 
@@ -175,12 +173,12 @@
             
             $paymentOption = implode(",",$paymentMethod);
 
-            $updateWithImage = "update customers set name = '$name', phone = $phone, email = '$email', paymentmethod = '$payementOption', paymentinfo = '$paymentInfo', gender = '$gender', country = '$country', state = '$state', image = '$image' where id = $id";
+            $updateWithImage = "update customers set name = '$name', phone = $phone, email = '$email', paymentmethod = '$paymentOption', paymentinfo = '$paymentInfo', gender = '$gender', country = '$country', state = '$state', image = '$image' where id = $id";
 
             $deleteImage = "select image from customers where id = $id";
-            $result = $conn->query($updateWithImage);
-            $row = $result->fetch_array();
-            $images = $row[0];
+            $result = $conn->query($deleteImage);
+            $row = $result->fetch_assoc();
+            $images = $row["image"];
             $imgArr = explode(",", $images);
             foreach($imgArr as $img) {
                 if(file_exists("images/$img")) {
@@ -189,11 +187,10 @@
                 }
             }
             if($conn->query($updateWithImage) === TRUE) {
-                header("Refresh:0; Location:index.php");
+                header("Location:index.php");
             } else {
                 echo $conn->error;
             }
         }
-        
-    }
+      
 ?> 
