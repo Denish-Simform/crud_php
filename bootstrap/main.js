@@ -19,7 +19,7 @@ $(document).ready(function () {
             {
                 "mData": "image",
                 "mRender": function (data, type, full) {
-                    return "<img src='../images/" + data + "' alt='userImage' class='table-image'>";
+                    return "<img src='/crud_php/images/" + data + "' alt='userImage' class='table-image'>";
                 }
             },
             { "data": "paymentmethod" },
@@ -116,7 +116,7 @@ $(document).ready(function () {
         $("#" + $(this)[0].id + "Error").html("");
         $.ajax({
             method: "POST",
-            url: "../getstate.php",
+            url: "/crud_php/getstate.php",
             datatype: "json",
             data: { data: countryname },
             success: function (data) {
@@ -224,9 +224,9 @@ $("#form").submit(function (event) {
             email: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
         },
         message: {
-            name: 'Enter valid Name (Minimum length should be grater than 4)',
+            name: 'Enter valid Name (Minimum length should be 4)',
             phone: 'Enter valid Phone Number',
-            email: 'Enter valid Email (Minimum length should be grater than 6)',
+            email: 'Enter valid Email (Minimum length should be 6)',
         }
     };
 
@@ -236,9 +236,9 @@ $("#form").submit(function (event) {
         data.cname = cname;
         data.cnumber = cnumber;
         globalRegex.rules.cname = /^[a-zA-Z\s]{4,}$/;
-        globalRegex.rules.cnumber = /^[0-9]{10,}$/;
+        globalRegex.rules.cnumber = /^[0-9]{16}$/;
         globalRegex.message.cname = 'Enter valid Name (Minimum length should be grater than 4)';
-        globalRegex.message.cnumber = 'Enter valid Credit card Number (Minimum length should be grater than 10)';
+        globalRegex.message.cnumber = 'Enter valid Credit card Number (Length must be 16)';
     };
     if (payment.includes("debit")) {
         var dname = $("#dname").val().trim().toLowerCase();
@@ -246,9 +246,9 @@ $("#form").submit(function (event) {
         data.dname = dname;
         data.dnumber = dnumber;
         globalRegex.rules.dname = /^[a-zA-Z\s]{4,}$/;
-        globalRegex.rules.dnumber = /^[0-9]{10,}$/;
+        globalRegex.rules.dnumber = /^[0-9]{16}$/;
         globalRegex.message.dname = 'Enter valid Name (Minimum length should be grater than 4)';
-        globalRegex.message.dnumber = 'Enter valid Debit card Number (Minimum length should be grater than 10)';
+        globalRegex.message.dnumber = 'Enter valid Debit card Number (Length must be 16)';
     };
     if (payment.includes("upi")) {
         var uname = $("#uname").val().trim().toLowerCase();
@@ -257,7 +257,7 @@ $("#form").submit(function (event) {
         data.uid = uid;
         globalRegex.rules.uname = /^[a-zA-Z\s]{4,}$/;
         globalRegex.rules.uid = /^[0-9A-Za-z.-]{2,30}@[a-zA-Z]{2,10}$/;
-        globalRegex.message.uname = 'Enter valid Name (Minimum length should be grater than 4)';
+        globalRegex.message.uname = 'Enter valid Name (Minimum length should be 4)';
         globalRegex.message.uid = 'Enter valid UPI ID';
     };
 
@@ -279,7 +279,7 @@ function confirmDelete(id) {
     if (result == true) {
         $.ajax({
             type: "GET",
-            url: "../action.php",
+            url: "/crud_php/action.php",
             data: { "id": id },
             success: function () {
                 window.location.reload();
@@ -288,4 +288,8 @@ function confirmDelete(id) {
     } else {
         return false;
     }
+}
+
+function resetForm() {
+    window.location.reload();
 }

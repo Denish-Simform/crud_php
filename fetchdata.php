@@ -1,7 +1,10 @@
 <?php
     require("config.php");
 
-    $sql = "select id, name, phone, email, gender, image, paymentmethod, country, state from customers";
+    $sql = "select c.id, c.name, c.phone, c.email, c.gender, c.paymentmethod, c.country, c.state, GROUP_CONCAT(i.imagename) AS image 
+    from customers c
+    join customerimages i on c.id = i.cid
+    group by i.cid";
 
     $result = $conn->query($sql);
 
@@ -53,7 +56,8 @@
             "data" => $array
         );
 
-        echo json_encode($dataset);       
+        echo json_encode($dataset);
+              
     } else {
         echo json_encode(array());
     }

@@ -1,6 +1,6 @@
 <?php
     session_start();
-    $_SESSION["flag"] = 0;  
+    $_SESSION['flag'] = 0;  
     require("config.php");
 ?>
 
@@ -13,10 +13,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sure</title>
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/bootstrap/css/datatable.css">
-    <link rel="stylesheet" href="/bootstrap/style.css">
-    <link rel="stylesheet" href="/font-awesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/crud_php/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/crud_php/bootstrap/css/datatable.css">
+    <link rel="stylesheet" href="/crud_php/bootstrap/style.css">
+    <link rel="stylesheet" href="/crud_php/font-awesome/css/fontawesome.min.css">
 </head>
 
 <body>
@@ -24,7 +24,10 @@
         if(isset($_GET["id"]) && $_SESSION['flag'] == 0) {   
             $_SESSION['flag'] = 1;
             $id = $_GET["id"];
-            $sql = "select * from customers where id = $id";
+            $sql = "select c.name, c.phone, c.email, c.gender, c.paymentmethod, c.paymentinfo, c.country, c.state, GROUP_CONCAT(i.imagename) AS image 
+            from customers c
+            join customerimages i on c.id = i.cid
+            where c.id = $id";
             $dataArray = array();
             $result = $conn->query($sql);
             if($result->num_rows > 0) {
@@ -32,7 +35,7 @@
                     $name = $row['name'];
                     $phone = $row['phone'];
                     $email = $row['email'];
-                    $password = $row['password'];
+                    // $password = $row['password'];
                     $country = $row['country'];
                     $state = $row['state'];
                     $gender = $row['gender'];
@@ -48,7 +51,7 @@
         }
 
     ?>
-    <div class="container p-5">
+    <div class="container p-5 form-wrap">
         <div class="formTitle text-center">
             <h1>Form</h1>
         </div>
@@ -75,7 +78,7 @@
                     <label for="email" id="emailLabel" class="col-2 text-start">Email</label>
                     <input type="email" name="email" id="email" class="col-4" value="<?php if(isset($id)) echo $email;?>">
                 </div>
-                <span id="emailError" class="error-validate"></span>
+                <span id="emailError" class="error-validate"><?php if(isset($_SESSION['emailError'])) echo $_SESSION['emailError']; unset($_SESSION['emailError']);?></span>
 
                 <!--  enter password -->
                 <div class="form-group " >
@@ -258,7 +261,7 @@
                 <!-- submit -->
                 <div class="form-group">
                     <input type="submit" name="submit" id="submit" class="col-3">
-                    <input type="reset" name="reset" id="reset" class="col-3">
+                    <input type="reset" name="reset" id="reset" class="col-3" onclick="resetForm()">
                 </div>
 
             </form>
@@ -268,8 +271,8 @@
     <?php
 
         $_SESSION['flag'] = 0;
-        session_unset();
-        session_destroy();
+        // session_unset();
+        // session_destroy();
 
     ?>
 
@@ -327,13 +330,13 @@
     </div>
 
 </body>
-<script src="/bootstrap/js/popper.min.js"></script>
-<script src="/bootstrap/js/jquery-3.6.3.min.js"></script>
-<script src="/bootstrap/js/bootstrap.min.js"></script>
-<script src="/bootstrap/js/jquery-validate.min.js"></script>
-<script src="/font-awesome/js/fontawesome.min.js"></script>
-<script src="/bootstrap/js/datatable.js"></script>
-<script src="/bootstrap/main.js"></script>
+<script src="/crud_php/bootstrap/js/popper.min.js"></script>
+<script src="/crud_php/bootstrap/js/jquery-3.6.3.min.js"></script>
+<script src="/crud_php/bootstrap/js/bootstrap.min.js"></script>
+<script src="/crud_php/bootstrap/js/jquery-validate.min.js"></script>
+<script src="/crud_php/font-awesome/js/fontawesome.min.js"></script>
+<script src="/crud_php/bootstrap/js/datatable.js"></script>
+<script src="/crud_php/bootstrap/main.js"></script>
 
 </html>
 

@@ -1,19 +1,21 @@
 <?php
+    session_start();
     require("config.php");
     $dirName = "images/";
     if(isset($_POST["submit"]) && $_POST["update"] == "") { //For Insert data
         $name = $_POST["name"];
         $phone = $_POST["phone"];
         $email = $_POST["email"];
+        checkEmail($email,$conn);
         $password = md5($_POST["password"]);
         $confirm_password = md5($_POST["cnfpassword"]);
         $country = $_POST["country"];
         $state = $_POST["state"];
         $gender = $_POST["gender"];
         $img_num = count($_FILES["image"]["name"]);
-        $img_arr = array($img_num);
+        $imgArr = array($img_num);
         for($i = 0; $i < $img_num; $i++) {
-            $img_arr[$i] = $_FILES["image"]["name"][$i];
+            $imgArr[$i] = $_FILES["image"]["name"][$i];
             $temp_name = $_FILES["image"]["tmp_name"][$i];
                 if(move_uploaded_file($_FILES["image"]["tmp_name"][$i], $dirName . basename($_FILES["image"]["name"][$i]))) {
                     echo $_FILES["image"]["name"][$i];
@@ -24,7 +26,7 @@
                 }           
         }
 
-        $image = implode(",", $img_arr);
+        $image = implode(",", $imgArr);
         
         $paymentMethod = array();
         if(isset($_POST["payment1"])) {
@@ -51,9 +53,16 @@
         $paymentInfo = serialize($paymentDetails);
         
         $paymentOption = implode(",",$paymentMethod);
-        $sql = "insert into customers (name, phone, email, password, gender, image, paymentmethod, paymentinfo, country, state) value ('$name', $phone, '$email', '$password', '$gender', '$image','$paymentOption', '$paymentInfo', '$country', '$state') ";
+        $sql = "insert into customers (name, phone, email, password, gender, paymentmethod, paymentinfo, country, state) value ('$name', $phone, '$email', '$password', '$gender', '$paymentOption', '$paymentInfo', '$country', '$state') "; // insert data into customers 
     
         if($conn->query($sql) === TRUE){
+            $lastId = $conn->insert_id;
+            foreach($imgArr as $imagename) {
+                $uploadImage = "insert into customerimages (cid, imagename) value ($lastId, '$imagename')"; // Insert images into customerimages
+                if($conn->query($uploadImage) === TRUE){
+                    echo "Images uploaded successfully";
+                }
+            }
             header("Location:index.php");
         } else {
             echo $conn->error;
@@ -62,12 +71,12 @@
     } elseif($_SERVER['REQUEST_METHOD'] === 'GET') { // For DELETE
         if(isset($_GET['id'])) {
             $id = $_GET['id'];
-            $sqlGetImage = "select image from customers where id = $id";
+            $sqlGetImage = "select GROUP_CONCAT(imagename) as image from customerimages where cid = $id"; // Delete images from images/ folder
             $result = $conn->query($sqlGetImage);
             $row = $result->fetch_array();
             $images = $row[0];
             $imgArr = explode(",", $images);
-            $sqlDelete = "delete from customers where id = $id";
+            $sqlDelete = "delete from customers where id = $id"; // Delete data from customers + customerimages
 
             if($conn->query($sqlDelete) === true) {
                 foreach($imgArr as $img) {
@@ -87,6 +96,7 @@
             $name = $_POST["name"];
             $phone = $_POST["phone"];
             $email = $_POST["email"];
+            checkEmail($email,$conn,$id);
             $country = $_POST["country"];
             $state = $_POST["state"];
             $gender = $_POST["gender"];
@@ -128,13 +138,14 @@
             $name = $_POST["name"];
             $phone = $_POST["phone"];
             $email = $_POST["email"];
+            checkEmail($email,$conn,$id);
             $country = $_POST["country"];
             $state = $_POST["state"];
             $gender = $_POST["gender"];
             $img_num = count($_FILES["image"]["name"]);
-            $img_arr = array($img_num);
+            $imgArr = array($img_num);
             for($i = 0; $i < $img_num; $i++) {
-                $img_arr[$i] = $_FILES["image"]["name"][$i];
+                $imgArr[$i] = $_FILES["image"]["name"][$i];
                 $temp_name = $_FILES["image"]["tmp_name"][$i];
                     if(move_uploaded_file($_FILES["image"]["tmp_name"][$i], $dirName . basename($_FILES["image"]["name"][$i]))) {
                         echo $_FILES["image"]["name"][$i];
@@ -145,7 +156,7 @@
                     }           
             }
 
-            $image = implode(",", $img_arr);
+            $image = implode(",", $imgArr);
 
             $paymentMethod = array();
             if(isset($_POST["payment1"])) {
@@ -173,24 +184,57 @@
             
             $paymentOption = implode(",",$paymentMethod);
 
-            $updateWithImage = "update customers set name = '$name', phone = $phone, email = '$email', paymentmethod = '$paymentOption', paymentinfo = '$paymentInfo', gender = '$gender', country = '$country', state = '$state', image = '$image' where id = $id";
+            $updateWithImage = "update customers set name = '$name', phone = $phone, email = '$email', paymentmethod = '$paymentOption', paymentinfo = '$paymentInfo', gender = '$gender', country = '$country', state = '$state' where id = $id"; // update data into customers
 
-            $deleteImage = "select image from customers where id = $id";
-            $result = $conn->query($deleteImage);
+            $deleteImagefromFolder = "select GROUP_CONCAT(imagename) as image from customerimages where id = $id"; // delete images from images/ folder
+
+            $result = $conn->query($deleteImagefromFolder);
             $row = $result->fetch_assoc();
             $images = $row["image"];
-            $imgArr = explode(",", $images);
-            foreach($imgArr as $img) {
+            $imgArrDelete = explode(",", $images);
+            foreach($imgArrDelete as $img) {
                 if(file_exists("images/$img")) {
                     unlink("images/$img");
                     echo "Record Deleted Successfully";
                 }
             }
             if($conn->query($updateWithImage) === TRUE) {
+                $lastId = $conn->insert_id;
+                foreach($imgArr as $imagename) {
+                    $deleteImagesfromDatabase = "delete from customerimages where cid = $lastId"; // delete from customerimages
+                    if($conn->query($deleteImagesfromDatabase) === TRUE){
+                        echo "Images deleted successfully";
+                    }
+                    $uploadImage = "insert into customerimages (cid, imagename) value ($lastId, '$imagename')"; // insert new images into customerimages
+                    if($conn->query($uploadImage) === TRUE){
+                        echo "Images uploaded successfully";
+                    }
+                }
                 header("Location:index.php");
             } else {
                 echo $conn->error;
             }
+        }
+
+        function checkEmail($email,$conn,$id=0) {
+            $checksql = "select id, email from customers where email = '$email'";
+            if($result = $conn->query($checksql)){
+                $row = $result->fetch_assoc();
+                if($id != 0) { // called while insert
+                    if($result->num_rows > 0 && $row['id'] != $id) {
+                        $_SESSION["emailError"] = "$email already exists";
+                        header("Location:index.php?id=$id");
+                        exit();
+                    }          
+                } else { // called while update
+                    if($result->num_rows > 0) {
+                        $_SESSION["emailError"] = "$email already exists";
+                        header("Location:index.php");
+                        exit();
+                    }
+                }
+
+            };
         }
       
 ?> 
