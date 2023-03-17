@@ -2,12 +2,9 @@
     session_start();
     require("config.php");
     $dirName = "assets/storedImages/";
-
     if(isset($_POST["submit"])) { 
-
         $dataVal = array();
         $dataKey = array();
-
         if(isset($_POST["id"])) {
             $id = $_POST["id"];
         }
@@ -84,40 +81,28 @@
             array_push($dataVal, $paymentInfo);
             array_push($dataKey, "paymentinfo");
         }
-
         $dataArr = array_combine($dataKey, $dataVal);
-
         checkEmail($email,$conn,$dataArr,$id);
-
         if($_POST["id"] == "") {  // Insert
-
             $insert = "insert into customers (name, phone, email, password, gender, paymentmethod, paymentinfo, country, state) value ('$name', $phone, '$email', '$password', '$gender', '$paymentOption', '$paymentInfo', '$country', '$state') "; // insert data into customers 
-        
             if($conn->query($insert) === TRUE){
                 echo "Data inserted successfully";
                 // header("Location:register.php");
             } else {
                 echo $conn->error;
             }
-
             $lastId = $conn->insert_id;
-
         } else { // Update
-
             $update = "update customers set name = '$name', phone = $phone, email = '$email', paymentmethod = '$paymentOption', paymentinfo = '$paymentInfo', gender = '$gender', country = '$country', state = '$state' where id = $id";
-
             if($conn->query($update) === TRUE) {
                 echo "Data updated successfully";
                 // header("Location:register.php");
             } else {
                 echo $conn->error;
             }
-
             $lastId = $id;
         }            
-
         if(count(array_filter($_FILES["image"]["name"])) > 0) {
-
             $img_num = count($_FILES["image"]["name"]);
             $imgArr = array($img_num);
             for($i = 0; $i < $img_num; $i++) {
@@ -137,7 +122,6 @@
                     }
                 }    
             }
-                    
             $deleteImagesfromDatabase = "delete from customerimages where cid = $lastId"; // delete from customerimages
             if($conn->query($deleteImagesfromDatabase) === TRUE){
                 echo "Images deleted successfully";
@@ -157,24 +141,9 @@
                 } else {
                     die("File is not Uploaded");            
                 }  
-            }            
-
-            // foreach($_FILES["image"]["name"] as $imagename) {
-            //     $uploadImage = "insert into customerimages (cid, imagename) value ($lastId, '$imagename['name']')"; // Insert images into customerimages
-            //     if($conn->query($uploadImage) === TRUE){
-                    // if(move_uploaded_file($imagename["tmp_name"], $dirName . basename($images["name"]))) {
-                        // echo $imagename["name"];
-                        // chmod($dirName . basename($imagename["name"]), 0777);
-                        // echo "Images uploaded successfully";
-                    // } else {
-                    //     die("File is not Uploaded");            
-                    // }
-            //     }            
-            // }
-
+            }    
         }
         header("Location:register.php");
-
     } elseif($_SERVER['REQUEST_METHOD'] === 'GET') { // For DELETE
         if(isset($_GET['id'])) {
             $id = $_GET['id'];
@@ -184,7 +153,6 @@
             $images = $row[0];
             $imgArr = explode(",", $images);
             $sqlDelete = "delete from customers where id = $id"; // Delete data from customers + customerimages
-
             if($conn->query($sqlDelete) === true) {
                 foreach($imgArr as $img) {
                     if(file_exists("assets/storedImages/$img")) {
@@ -200,7 +168,6 @@
     } else {
         header("Location:register.php");
     }
-
     function checkEmail($email,$conn,$dataArr,$id) {
         $checksql = "select id, email from customers where email = '". $email . "'";
         if($result = $conn->query($checksql)){
@@ -220,8 +187,6 @@
                     exit();
                 }
             }
-
         };
     }
-      
 ?> 

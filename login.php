@@ -5,10 +5,8 @@
         header("Location: dashboard.php");
     }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,7 +17,6 @@
     <link rel="stylesheet" href="/crud_php/assets/bootstrap/style.css">
     <link rel="stylesheet" href="/crud_php/assets/font-awesome/css/all.min.css">
 </head>
-
 <body class="bg-dark text-white">
     <nav class="navbar sticky-top navbar-expand-lg bg-dark" id="navbar">
         <div class="container-fluid">
@@ -34,7 +31,6 @@
                     <li class="nav-item">
                         <button type="button" class="btn btn-dark text-white" onclick="home()">Home</button>
                     </li>
-
                     <li class="nav-item">
                         <button type="button" class="btn btn-dark text-white" onclick="register()">Register</button>
                     </li>                 
@@ -42,7 +38,6 @@
             </div>
         </div>
     </nav>
-
     <div class="container p-5 form-wrap bg-dark text-white">
     <?php
         if(isset($_POST["submit"])) {
@@ -95,11 +90,9 @@
             </form>
         </div>                    
     </div>
-
     <button id="back-to-top-btn" class="btn btn-primary btn-lg back-to-top">
         <i class="fas fa-arrow-up"></i>
     </button>
-
 </body>
 <script src="/crud_php/assets/bootstrap/js/popper.min.js"></script>
 <script src="/crud_php/assets/bootstrap/js/jquery-3.6.3.min.js"></script>
@@ -108,5 +101,4 @@
 <script src="/crud_php/assets/font-awesome/js/fontawesome.min.js"></script>
 <script src="/crud_php/assets/bootstrap/common.js"></script>
 <script src="/crud_php/assets/bootstrap/login.js"></script>
-
 </html>

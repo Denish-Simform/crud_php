@@ -3,7 +3,6 @@
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,7 +12,6 @@
     <link rel="stylesheet" href="assets/font-awesome/css/all.min.css">
     <link rel="stylesheet" href="assets/bootstrap/style.css">
 </head>
-
 <body class="bg-dark" data-spy="scroll" data-target="#navbar" data-offset-top="200">
     <nav class="navbar sticky-top navbar-expand-lg bg-dark" id="navbar">
         <div class="container-fluid">
@@ -56,7 +54,6 @@
             </div>
         </div>
     </nav>
-
     <section class="d-flex justify-content-center section_toggle" id="carousel">
         <div id="carouselExampleIndicators" class="carousel slide w-75 h-50" data-ride="carousel">
             <ol class="carousel-indicators">
@@ -91,11 +88,9 @@
             </a>
         </div>
     </section>
-
     <button id="back-to-top-btn" class="btn btn-primary btn-lg back-to-top">
         <i class="fas fa-arrow-up"></i>
     </button>
-
     <section class="mt-5 batches section_toggle" id="batches">
         <div class="container p-5">
             <div class="row text-center text-light">
@@ -125,7 +120,6 @@
                 </div>
             </div>
         </div>
-
         <div class="container bg-dark p-5">
             <div class="row text-center">
                 <h1 class="text-light">Our Batches</h1>
@@ -194,7 +188,6 @@
             </div>
         </div>
     </section>
-
     <section class="mt-5 section_toggle events" id="events">
         <div class="container p-5">
             <h1 class="text-center text-light">Upcoming Events : Stay Tuned</h1>
@@ -234,9 +227,7 @@
                 </div>
             </div>
         </div>
-
     </section>
-
     <section class="container mt-5 section_toggle testimonials" id="testimonials">
         <div class="p-5">
             <div class="text-center">
@@ -245,14 +236,12 @@
                 </h1>
             </div>
             <div id="testimonial-carousel" class="carousel slide mt-5" data-ride="carousel">
-
                 <!-- Indicators -->
                 <ol class="carousel-indicators">
                     <li data-target="#testimonial-carousel" data-slide-to="0" class="active"></li>
                     <li data-target="#testimonial-carousel" data-slide-to="1"></li>
                     <li data-target="#testimonial-carousel" data-slide-to="2"></li>
                 </ol>
-
                 <!-- Slides -->
                 <div class="carousel-inner">
                     <div class="carousel-item active">
@@ -274,7 +263,6 @@
                                     </p>
                                     <img src="assets/images/person-1.png" alt="person-1" class="h-25 w-25">
                                 </div>
-
                                 <h4 class="card-title">John Doe</h4>
                             </div>
                         </div>
@@ -298,7 +286,6 @@
                                     </p>
                                     <img src="assets/images/person-2.png" alt="" class="h-25 w-25">
                                 </div>
-
                                 <h4 class="card-title">Jane Doe</h4>
                             </div>
                         </div>
@@ -325,13 +312,11 @@
                                     </p>
                                     <img src="assets/images/person-3.png" alt="" class="h-25 w-25">
                                 </div>
-
                                 <h4 class="card-title">Jim Smith</h4>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <!-- Controls -->
                 <a class="carousel-control-prev" href="#testimonial-carousel" role="button" data-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -341,11 +326,9 @@
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </a>
-
             </div>
         </div>
     </section>
-
     <section class="mt-5 section_toggle photos" id="photos">
         <div class="container p-5">
             <h1 class="text-center text-light">Photo Gallery</h1>
@@ -383,8 +366,6 @@
             </div>
         </div>
     </section>
-
-
     <section class="aboutUs" id="about_us">
         <div class="container p-5">
             <h2 class="text-center mt-5">About Us</h2>
@@ -425,7 +406,6 @@
                 </div>
             </div>
         </div>
-
     </section>
     <script src="assets/bootstrap/js/jquery-3.6.3.min.js"></script>
     <script src="assets/bootstrap/js/popper.min.js"></script>
@@ -433,5 +413,4 @@
     <script src="assets/bootstrap/script.js"></script>
     <script src="assets/bootstrap/common.js"></script>
 </body>
-
 </html>

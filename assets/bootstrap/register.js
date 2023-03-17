@@ -2,7 +2,6 @@ var checkArr = ["credit", "debit", "upi"];
 var checknum = [];
 var imgArr = [];
 $(document).ready(function () {
-    
     var table = $('#mytable').DataTable({
         "language": {
             "emptyTable": "No data available"
@@ -33,11 +32,9 @@ $(document).ready(function () {
             }
         ]
     });
-
     function removeError() {
         $("#" + $(this)[0].id + "Error").html(" ");
     }
-
     // update 
     if ($("input.cardDetails:checked")) {
         let className = $("input.cardDetails:checked").val();
@@ -55,7 +52,6 @@ $(document).ready(function () {
         $("." + className).addClass("none");
     }
     $(".cardDetails").value = checknum;
-
     $(".cardDetails").change(function () {
         $("#paymentError").html(" ");
         if ($(this).is(":checked")) {
@@ -75,15 +71,12 @@ $(document).ready(function () {
         }
         $(".cardDetails").value = checknum;
     });
-
     $(":input").focus(function () {
         $(this).addClass("focus-input");
     })
-
     $(":input").focusout(function () {
         $(this).removeClass("focus-input");
     })
-
     $("#image").change(function () {
         let len = this.files.length;
         $("#" + $(this)[0].id + "Error").html(" ");
@@ -97,12 +90,10 @@ $(document).ready(function () {
                     $('#showimg' + (i + 1)).attr('src', e.target.result).addClass("show-im");
                     imgArr.push(e.target.result);
                 };
-
                 reader.readAsDataURL(this.files[i]);
             }
         }
     });
-
     $("#country").change(function () {
         let countryname = $("#country option:selected").val();
         $("#" + $(this)[0].id + "Error").html("");
@@ -116,7 +107,6 @@ $(document).ready(function () {
             }
         });
     });
-
     $("#cnfpassword").keyup(function () {
         var password = $("#password").val().trim();
         var cnfpassword = $("#cnfpassword").val().trim();
@@ -126,18 +116,17 @@ $(document).ready(function () {
             $("#cnfpasswordError").html("");
         }
     })
-
-    $("#name").keypress(removeError);
-    $("#phone").keyup(removeError);
-    $("#email").keyup(removeError);
-    $("#password").keyup(removeError);
+    $("#name").focusin(removeError);
+    $("#phone").focusin(removeError);
+    $("#email").focusin(removeError);
+    $("#password").focusin(removeError);
     $("#state").change(removeError);
-    $("#cname").keyup(removeError);
-    $("#cnumber").keyup(removeError);
-    $("#dname").keyup(removeError);
-    $("#dnumber").keyup(removeError);
-    $("#uname").keyup(removeError);
-    $("#uid").keyup(removeError);
+    $("#cname").focusin(removeError);
+    $("#cnumber").focusin(removeError);
+    $("#dname").focusin(removeError);
+    $("#dnumber").focusin(removeError);
+    $("#uname").focusin(removeError);
+    $("#uid").focusin(removeError);
     $(".gender").change(function () {
         $("#genderError").html(" ");
     });
@@ -146,8 +135,6 @@ $(document).ready(function () {
         table = $('#mytable').DataTable();
     }, 2000);
 })
-
-
 $("#form").submit(function (event) {
     var validationFailed = false;
     var update = $("#update").val();
@@ -172,27 +159,22 @@ $("#form").submit(function (event) {
         $("#paymentError").html("Please select a payment method");
         validationFailed = true;
     }
-
     if (img.length < 1 && nonUpdatedImage == 0) {
         $("#imageError").html("Please select images");
         validationFailed = true;
     }
-
     if (gender == null) {
         $("#genderError").html("Please select your gender");
         validationFailed = true;
     }
-
     if (country == null) {
         $("#countryError").html("Please select your country");
         validationFailed = true;
     }
-
     if (state == null) {
         $("#stateError").html("Please select your state");
         validationFailed = true;
     }
-
     if (!password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/) && passwordDisabled == 0) {
         $("#passwordError").html("Enter valid Password (Should contain at least one special character, number and upper case letters)");
         validationFailed = true;
@@ -255,7 +237,6 @@ $("#form").submit(function (event) {
         return false;
     }
 });
-
 function confirmDelete(id) {
     var result = confirm("Are you sure you want to delete?");
     if (result == true) {
@@ -271,7 +252,6 @@ function confirmDelete(id) {
         return false;
     }
 }
-
 function resetForm() {
     window.location.reload();
 }

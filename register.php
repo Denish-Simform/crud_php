@@ -2,11 +2,8 @@
     session_start();
     require("config.php");
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,7 +14,6 @@
     <link rel="stylesheet" href="/crud_php/assets/bootstrap/style.css">
     <link rel="stylesheet" href="/crud_php/assets/font-awesome/css/all.min.css">
 </head>
-
 <body class="bg-dark">
 <nav class="navbar sticky-top navbar-expand-lg bg-dark" id="navbar">
         <div class="container-fluid">
@@ -32,11 +28,9 @@
                     <li class="nav-item">
                         <button type="button" class="btn btn-dark text-white" onclick="home()">Home</button>
                     </li>
-
                     <li class="nav-item">
                         <button type="button" class="btn btn-dark text-white" onclick="login()">Log In</button>
                     </li>
-                    
                 </ul>
             </div>
         </div>
@@ -54,7 +48,6 @@
                 $row = $result->fetch_assoc();
             }
         }
-
         if(isset($_GET["id"])) {
             if(isset($_SESSION["dataArr"])) {
                 $option = $_SESSION["dataArr"];
@@ -66,7 +59,6 @@
             $option = $_SESSION["dataArr"];
             unset($_SESSION['dataArr']);
         }
-
     ?>
     <div class="container p-5 form-wrap bg-dark text-white">
         <div class="formTitle text-center">
@@ -74,7 +66,6 @@
         </div>
         <div class="formBody text-center mt-5">
             <form id="form" action="action.php" method="post" enctype="multipart/form-data">
-
                 <input type="hidden" name="id" id="id" value="<?php if(isset($option["id"]))  echo $option["id"]; ?>">
                 <!-- name -->
                 <div class="form-group">
@@ -82,35 +73,30 @@
                     <input type="text" name="name" id="name" class="col-4" value="<?php if(isset($option["name"]))  echo $option["name"];?>">
                 </div>
                 <span id="nameError" class="error-validate"></span>
-
                 <!-- phone -->
                 <div class="form-group">
                     <label for="phone" id="phoneLabel" class="col-2 text-start">Phone Number</label>
                     <input type="number" name="phone" id="phone" class="col-4" value="<?php if(isset($option["phone"])) echo $option["phone"];?>">
                 </div>
                 <span id="phoneError" class="error-validate"></span>
-
                 <!-- email -->
                 <div class="form-group">
                     <label for="email" id="emailLabel" class="col-2 text-start">Email</label>
                     <input type="email" name="email" id="email" class="col-4" value="<?php if(isset($option["email"])) echo $option["email"];?>">
                 </div>
                 <span id="emailError" class="error-validate"><?php if(isset($_SESSION['emailError'])) echo $_SESSION['emailError']; unset($_SESSION['emailError']);?></span>
-
                 <!--  enter password -->
                 <div class="form-group " >   
                     <label for="password" id="passwordLabel" class="col-2 text-start ">Enter Password</label>
                     <input type="password" name="password" id="password" class="col-4 " <?php if(isset($option["id"])) echo "disabled";?>>
                 </div>
                 <span id="passwordError" class="error-validate "></span>
-
                 <!-- confirm password -->
                 <div class="form-group ">
                     <label for="cnfpassword" id="cnfpasswordLabel" class="col-2 text-start">Confirm Password</label>
                     <input type="password" name="cnfpassword" id="cnfpassword" class="col-4" <?php if(isset($option["id"])) echo "disabled";?>>
                 </div>
                 <span id="cnfpasswordError" class="error-validate"></span>
-
                 <!-- gender -->
                 <div class="form-group d-flex justify-content-center">
                     <label for="gender" id="genderLabel" class="col-2 text-start">Gender</label>
@@ -119,12 +105,10 @@
                             <input type="radio" name="gender" id="male" value="male" class="gender" <?php if(isset($option["gender"]) && $option["gender"] == "male") echo " checked";?>>
                             <label for="male" class="col-2 text-start ms-2">Male</label>
                         </div>
-
                         <div class="d-flex">
                             <input type="radio" name="gender" id="female" value="female" class="gender" <?php if(isset($option["gender"]) && $option["gender"] == "female") echo " checked";?>>
                             <label for="female" class="col-2 text-start ms-2">Female</label>
                         </div>
-
                         <div class="d-flex">
                             <input type="radio" name="gender" id="other" value="other" class="gender" <?php if(isset($option["gender"]) && $option["gender"] == "other") echo " checked";?>>
                             <label for="other" class="col-2 text-start ms-2">Other</label>
@@ -132,7 +116,6 @@
                     </div>
                 </div>
                 <span id="genderError" class="error-validate"></span>
-
                 <!-- image -->
                 <div class="form-group">
                     <label for="image" id="imageLabel" class="col-2 text-start">Image</label>
@@ -151,7 +134,6 @@
                     }
                     ?>
                 </div>
-
                 <!-- checkbox -->
                 <div class="form-group d-flex justify-content-center">
                     <label for="payment" id="paymentLabel" class="col-2 text-start">Payment Information</label>
@@ -160,12 +142,10 @@
                             <input type="checkbox" name="payment1" id="credit" value="credit" class="cardDetails" <?php if(isset($option["paymentmethod"]) && in_array("credit", explode(",", $option["paymentmethod"]))) echo ' checked';?>>
                             <label for="credit" class=" text-start ms-2">Credit card</label>
                         </div>
-
                         <div class="d-flex">
                             <input type="checkbox" name="payment2" id="debit" value="debit" class="cardDetails" <?php if(isset($option["paymentmethod"]) && in_array("debit", explode(",", $option["paymentmethod"]))) echo ' checked'; ?>>
                             <label for="debit" class=" text-start ms-2">Debit card</label>
                         </div>
-
                         <div class="d-flex">
                             <input type="checkbox" name="payment3" id="upi" value="upi" class="cardDetails" <?php if(isset($option["paymentmethod"]) && in_array("upi", explode(",", $option["paymentmethod"]))) echo ' checked'; ?>>
                             <label for="upi" class=" text-start ms-2">UPI</label>
@@ -173,7 +153,6 @@
                     </div>
                 </div>
                 <span id="paymentError" class="error-validate"></span>
-
                 <!-- payment-interface -->
                 <div class="paymentInterface">
                     <?php
@@ -193,7 +172,6 @@
                             <input type="text" name="cname" id="cname" class="col-4" value="<?php if(isset($cname)) echo $cname;?>">
                         </div>
                         <span id="cnameError" class="error-validate"></span>
-
                         <!-- creditcardnumber -->
                         <div class="form-group">
                             <label for="cnumber" id="cnumberLabel" class="col-2 text-start">Credit Card Number</label>
@@ -201,7 +179,6 @@
                         </div>
                         <span id="cnumberError" class="error-validate"></span>
                     </div>
-
                     <!-- debit card -->
                     <div class="debit text-center <?php if(isset($option["paymentmethod"]) && in_array("debit", explode(",", $option["paymentmethod"]))) echo 'block'; else echo 'none';?>" >
                         <h3>Debit Card</h3>
@@ -211,7 +188,6 @@
                             <input type="text" name="dname" id="dname" class="col-4" value="<?php if(isset($dname)) echo $dname;?>">
                         </div>
                         <span id="dnameError" class="error-validate"></span>
-
                         <!-- debitcardnumber -->
                         <div class="form-group">
                             <label for="dnumber" id="dnumberLabel" class="col-2 text-start">Debit Card Number</label>
@@ -219,7 +195,6 @@
                         </div>
                         <span id="dnumberError" class="error-validate"></span>
                     </div>
-
                     <!-- upi -->
                     <div class="upi text-center <?php if(isset($option["paymentmethod"]) && in_array("upi", explode(",", $option["paymentmethod"]))) echo 'block'; else echo 'none';?>" >
                         <h3>UPI</h3>
@@ -229,7 +204,6 @@
                             <input type="text" name="uname" id="uname" class="col-4" value="<?php if(isset($uname)) echo $uname;?>">
                         </div>
                         <span id="unameError" class="error-validate"></span>
-
                         <!-- debitcardnumber -->
                         <div class="form-group">
                             <label for="uid" id="uidLabel" class="col-2 text-start">UPI Id </label>
@@ -238,7 +212,6 @@
                         <span id="uidError" class="error-validate"></span>
                     </div>
                 </div>
-
                 <!-- Country -->
                 <div class="form-group d-flex justify-content-center">
                     <label for="country" id="countryLabel" class="col-2 text-start">Country </label>
@@ -253,7 +226,6 @@
                     </div>
                 </div>
                 <span id="countryError" class="error-validate"></span>
-
                 <!-- States -->
                 <div class="form-group d-flex justify-content-center">
                     <label for="state" id="stateLabel" class="col-2 text-start">State </label>
@@ -278,7 +250,6 @@
                     </div>
                 </div>
                 <span id="stateError" class="error-validate"></span>
-
                 <!-- submit -->
                 <div class="form-group">
                     <input type="submit" name="submit" id="submit" class="col-3">
@@ -287,64 +258,29 @@
             </form>
         </div>
     </div>
-
     <div class="table bg-dark text-white">
         <table id="mytable" class="display">
             <thead>
                 <tr>
-                    <th>
-                        Id
-                    </th>
-
-                    <th>
-                        Name
-                    </th>
-
-                    <th>
-                        Phone Number
-                    </th>
-
-                    <th>
-                        Email
-                    </th>
-
-                    <th>
-                        Gender
-                    </th>
-
-                    <th>
-                        Image
-                    </th>
-
-                    <th>
-                        Payment Methods
-                    </th>
-
-                    <th>
-                        Country
-                    </th>
-
-                    <th>
-                        State
-                    </th>
-
-                    <th>
-                        Actions
-                    </th>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Image</th>
+                    <th>Payment Methods</th>
+                    <th>Country</th>
+                    <th>State</th>
+                    <th>Actions</th>
                 </tr>
-
             </thead>
-
             <tbody id="tbody">
-
             </tbody>
         </table>
     </div>
-
     <button id="back-to-top-btn" class="btn btn-primary btn-lg back-to-top">
         <i class="fas fa-arrow-up"></i>
     </button>
-
 </body>
 <script src="/crud_php/assets/bootstrap/js/popper.min.js"></script>
 <script src="/crud_php/assets/bootstrap/js/jquery-3.6.3.min.js"></script>
@@ -354,6 +290,4 @@
 <script src="/crud_php/assets/bootstrap/js/datatable.js"></script>
 <script src="/crud_php/assets/bootstrap/register.js"></script>
 <script src="/crud_php/assets/bootstrap/common.js"></script>
-
 </html>
-

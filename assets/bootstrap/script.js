@@ -1,14 +1,11 @@
 let slideIndex = 1;
 showSlides(slideIndex);
-
 function plusSlides(n) {
     showSlides(slideIndex += n);
 }
-
 function currentSlide(n) {
     showSlides(slideIndex = n);
 }
-
 function showSlides(n) {
     let i;
     let slides = document.getElementsByClassName("img-slide");
@@ -24,7 +21,6 @@ function showSlides(n) {
     slides[slideIndex - 1].style.display = "block";
     dots[slideIndex - 1].className += " active";
 }
-
 function scrollHide(link) {
     const collection = document.getElementsByClassName('section_toggle');
     for (const col of collection) {
@@ -40,8 +36,3 @@ function scrollHide(link) {
         }
     }
 }
-
-
-
-
-

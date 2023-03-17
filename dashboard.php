@@ -1,15 +1,12 @@
 <?php
     session_start();
     require("config.php");
-
     if(isset($_SESSION["id"])) {
         $id = $_SESSION["id"];
-
         $get_data = "select c.id, c.name, c.phone, c.email, c.gender, c.paymentmethod, c.paymentinfo, c.country, c.state, GROUP_CONCAT(i.imagename) AS image 
         from customers c
         join customerimages i on c.id = i.cid
         where c.id = $id";
-
         $result = $conn->query($get_data);
         if($result->num_rows > 0) {
             $row = $result->fetch_assoc();
@@ -18,11 +15,8 @@
         header("Location: login.php");
     }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -33,7 +27,6 @@
     <link rel="stylesheet" href="/crud_php/assets/bootstrap/style.css">
     <link rel="stylesheet" href="/crud_php/assets/font-awesome/css/all.min.css">
 </head>
-
 <body class="bg-dark text-white">
     <nav class="navbar sticky-top navbar-expand-lg bg-dark" id="navbar">
         <div class="container-fluid">
@@ -55,7 +48,6 @@
             </div>
         </div>
     </nav>
-
     <div class="container">
         <div class="details">
             <div class="fields">
@@ -93,13 +85,39 @@
                         extract($paymentinfo);
                         if(isset($credit)) {
                             extract($credit); 
-                            print_r($credit);
+                            echo "<pre>";
+                            echo "\t\tCredit card : ";
+                            if(isset($cname)) {
+                                echo "Holder's Name - ". ucfirst($cname) . ", ";
+                            }
+                            if(isset($cnumber)) {
+                                echo "Credit card Number - ". substr_replace($cnumber, str_repeat('*', strlen($cnumber)-4), 4) . "<br>";
+                            }
+                            echo "</pre>";
                         }
                         if(isset($upi)) {
-                            print_r($upi);
+                            extract($upi); 
+                            echo "<pre>";
+                            echo "\t\tUPI : ";
+                            if(isset($uname)) {
+                                echo "Holder's Name - ". ucfirst($uname) . ", ";
+                            }
+                            if(isset($uid)) {
+                                echo "UPI ID - ". substr_replace($uid, str_repeat('*', strlen($uid)-4), 4) . "<br>";
+                            }
+                            echo "</pre>";
                         }
                         if(isset($debit)) {
-                            print_r($debit);
+                            extract($debit); 
+                            echo "<pre>";
+                            echo "\t\tDebit card : ";
+                            if(isset($dname)) {
+                                echo "Holder's Name - ". ucfirst($dname) . ", ";
+                            }
+                            if(isset($dnumber)) {
+                                echo "Debit card Number - ". substr_replace($dnumber, str_repeat('*', strlen($dnumber)-4), 4) . "<br>";
+                            }
+                            echo "</pre>";
                         }
                     }
                 ?>
@@ -130,7 +148,6 @@
             </div>
         </div>
     </div>
-
     <button id="back-to-top-btn" class="btn btn-primary btn-lg back-to-top">
         <i class="fas fa-arrow-up"></i>
     </button>
@@ -142,5 +159,4 @@
 <script src="/crud_php/assets/font-awesome/js/fontawesome.min.js"></script>
 <script src="/crud_php/assets/bootstrap/js/datatable.js"></script>
 <script src="/crud_php/assets/bootstrap/common.js"></script>
-
 </html>
