@@ -110,3 +110,9 @@ html {
 .btn {
     box-shadow: none !important;
 }
+
+.dashboard_images {
+    height: 200px;
+    width: 300px;
+    margin: 0 auto;
+}

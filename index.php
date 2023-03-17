@@ -1,10 +1,6 @@
 <?php
     session_start();
-    $_SESSION['flag'] = 0;  
-    require("config.php");
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,331 +8,430 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sure</title>
-    <link rel="stylesheet" href="/crud_php/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/crud_php/bootstrap/css/datatable.css">
-    <link rel="stylesheet" href="/crud_php/bootstrap/style.css">
-    <link rel="stylesheet" href="/crud_php/font-awesome/css/fontawesome.min.css">
+    <title>JNV Jamnagar Alumni Association</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/font-awesome/css/all.min.css">
+    <link rel="stylesheet" href="assets/bootstrap/style.css">
 </head>
 
-<body>
-    <?php
-        if(isset($_GET["id"]) && $_SESSION['flag'] == 0) {   
-            $_SESSION['flag'] = 1;
-            $id = $_GET["id"];
-            $sql = "select c.name, c.phone, c.email, c.gender, c.paymentmethod, c.paymentinfo, c.country, c.state, GROUP_CONCAT(i.imagename) AS image 
-            from customers c
-            join customerimages i on c.id = i.cid
-            where c.id = $id";
-            $dataArray = array();
-            $result = $conn->query($sql);
-            if($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    $name = $row['name'];
-                    $phone = $row['phone'];
-                    $email = $row['email'];
-                    // $password = $row['password'];
-                    $country = $row['country'];
-                    $state = $row['state'];
-                    $gender = $row['gender'];
-                    $images = explode(",", $row['image']);
-                    $imglen = count($images);
-                    $paymentmethod = explode(",", $row['paymentmethod']);
-                    $paymentinfo = unserialize($row['paymentinfo']);
-                    foreach ($paymentinfo as $key => $value) {
-                        extract($paymentinfo[$key]);
-                    }
-                }
-            }
-        }
-
-    ?>
-    <div class="container p-5 form-wrap">
-        <div class="formTitle text-center">
-            <h1>Form</h1>
+<body class="bg-dark" data-spy="scroll" data-target="#navbar" data-offset-top="200">
+    <nav class="navbar sticky-top navbar-expand-lg bg-dark" id="navbar">
+        <div class="container-fluid">
+            <img src="assets/images/logo-small.png" class="me-3" alt="">
+            <a class="navbar-brand text-light me-0" href="#">JNV Jamnagar Alumni Association</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto w-100 justify-content-end">
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-dark text-white" onclick="scrollHide('home')">Home</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-dark text-white" onclick="scrollHide('batches')">Batches</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-dark text-white" onclick="scrollHide('events')">Events</button>
+                    </li>
+                    <li class="nav-item"> 
+                        <button type="button" class="btn btn-dark text-white" onclick="scrollHide('testimonials')">Testimonials</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-dark text-white" onclick="scrollHide('photos')">Photos</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-dark text-white" onclick="register()">Register</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-dark text-white" onclick="login()"><?php 
+                            if(isset($_SESSION["id"])) {
+                                echo "Profile";
+                            } else {
+                                echo "Log In";
+                            }
+                        ?></button>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="formBody text-center">
-            <form id="form" action="action.php" method="post" enctype="multipart/form-data">
+    </nav>
 
-                <input type="hidden" name="update" id="update" value="<?php if(isset($id))  echo $id; ?>">
-                <!-- name -->
-                <div class="form-group">
-                    <label for="name" id="nameLabel" class="col-2 text-start">Name</label>
-                    <input type="text" name="name" id="name" class="col-4" value="<?php if(isset($id))  echo $name;?>">
+    <section class="d-flex justify-content-center section_toggle" id="carousel">
+        <div id="carouselExampleIndicators" class="carousel slide w-75 h-50" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="d-block w-100 h-50" src="assets/images/slider-1.png" alt="First slide">
                 </div>
-                <span id="nameError" class="error-validate"></span>
-
-                <!-- phone -->
-                <div class="form-group">
-                    <label for="phone" id="phoneLabel" class="col-2 text-start">Phone Number</label>
-                    <input type="number" name="phone" id="phone" class="col-4" value="<?php if(isset($id)) echo $phone;?>">
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="assets/images/slider-2.png" alt="Second slide">
                 </div>
-                <span id="phoneError" class="error-validate"></span>
-
-                <!-- email -->
-                <div class="form-group">
-                    <label for="email" id="emailLabel" class="col-2 text-start">Email</label>
-                    <input type="email" name="email" id="email" class="col-4" value="<?php if(isset($id)) echo $email;?>">
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="assets/images/slider-3.png" alt="Third slide">
                 </div>
-                <span id="emailError" class="error-validate"><?php if(isset($_SESSION['emailError'])) echo $_SESSION['emailError']; unset($_SESSION['emailError']);?></span>
-
-                <!--  enter password -->
-                <div class="form-group " >
-                    <label for="password" id="passwordLabel" class="col-2 text-start ">Enter Password</label>
-                    <input type="password" name="password" id="password" class="col-4 " <?php if(isset($id)) echo "disabled";?>>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="assets/images/slider-4.png" alt="Third slide">
                 </div>
-                <span id="passwordError" class="error-validate "></span>
-
-                <!-- confirm password -->
-                <div class="form-group ">
-                    <label for="cnfpassword" id="cnfpasswordLabel" class="col-2 text-start">Confirm Password</label>
-                    <input type="password" name="cnfpassword" id="cnfpassword" class="col-4" <?php if(isset($id)) echo "disabled";?>>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="assets/images/slider-5.png" alt="Third slide">
                 </div>
-                <span id="cnfpasswordError" class="error-validate"></span>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </section>
 
-                <!-- gender -->
-                <div class="form-group d-flex justify-content-center">
-                    <label for="gender" id="genderLabel" class="col-2 text-start">Gender</label>
-                    <div class="col-4 d-flex flex-column">
-                        <div class="d-flex">
-                            <input type="radio" name="gender" id="male" value="male" class="gender" <?php if(isset($id) && $gender == "male") echo " checked";?>>
-                            <label for="male" class="col-2 text-start ms-2">Male</label>
-                        </div>
+    <button id="back-to-top-btn" class="btn btn-primary btn-lg back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
-                        <div class="d-flex">
-                            <input type="radio" name="gender" id="female" value="female" class="gender" <?php if(isset($id) && $gender == "female") echo " checked";?>>
-                            <label for="female" class="col-2 text-start ms-2">Female</label>
-                        </div>
-
-                        <div class="d-flex">
-                            <input type="radio" name="gender" id="other" value="other" class="gender" <?php if(isset($id) && $gender == "other") echo " checked";?>>
-                            <label for="other" class="col-2 text-start ms-2">Other</label>
-                        </div>
-                    </div>
+    <section class="mt-5 batches section_toggle" id="batches">
+        <div class="container p-5">
+            <div class="row text-center text-light">
+                <h1>COME IN TO LEARN, GO OUT TO SERVE</h1>
+                <div class="col-sm-2 mt-5">
+                    <img src="assets/images/jnv_logo.jpg" class="img-fluid rounded" alt="jnv_logo">
                 </div>
-                <span id="genderError" class="error-validate"></span>
+                <div class="col-sm-3 mt-5"></div>
+                <div class="col-sm-7 text-light mt-5 text-start">
+                    Jawahar Navodaya Vidyalaya (JNV) Jamnagar is a co-educational, residential school located in the
+                    city of
+                    Jamnagar, Gujarat, India. It is part of the Navodaya Vidyalaya Samiti, a government-run organization
+                    that operates a chain of schools across India. The aim of JNV Jamnagar, as well as other JNVs, is to
+                    provide quality education to talented children from rural areas of India.
 
-                <!-- image -->
-                <div class="form-group">
-                    <label for="image" id="imageLabel" class="col-2 text-start">Image</label>
-                    <input type="file" name="image[]" id="image" class="col-4" multiple accept="image/*">
+                    JNV Jamnagar follows the CBSE (Central Board of Secondary Education) curriculum and offers classes
+                    from
+                    VI to XII. The medium of instruction is primarily Hindi and English. Admissions to JNV Jamnagar are
+                    based on a nationwide entrance exam, known as the Jawahar Navodaya Vidyalaya Selection Test (JNVST),
+                    which is held annually for students in Class V.
+
+                    JNV Jamnagar provides a well-rounded education that emphasizes academics, sports, and co-curricular
+                    activities. The school has a dedicated team of experienced teachers and state-of-the-art facilities
+                    to
+                    support student learning and development. The school also provides free boarding and lodging to all
+                    students.
                 </div>
-                <span id="imageError" class="error-validate"></span>
-                <div class="imageContainer">
-                    <?php 
-                    if(isset($id)) { 
-                        $i = 1;
-                        foreach($images as $img) {
-                            echo "<img src='images/".$img."' alt='retrivedImage' id='showimg$i' class='show-im'>";
-                            $i++;
-                        }
-                    }
-                    ?>
-                </div>
+            </div>
+        </div>
 
-                <!-- checkbox -->
-                <div class="form-group d-flex justify-content-center">
-                    <label for="payment" id="paymentLabel" class="col-2 text-start">Payment Information</label>
-                    <div class="col-4 d-flex flex-column">
-                        <div class="d-flex">
-                            <input type="checkbox" name="payment1" id="credit" value="credit" class="cardDetails" <?php if(isset($id) && in_array("credit", $paymentmethod)) echo ' checked';?>>
-                            <label for="credit" class=" text-start ms-2">Credit card</label>
-                        </div>
-
-                        <div class="d-flex">
-                            <input type="checkbox" name="payment2" id="debit" value="debit" class="cardDetails" <?php if(isset($id) && in_array("debit", $paymentmethod)) echo ' checked'; ?>>
-                            <label for="debit" class=" text-start ms-2">Debit card</label>
-                        </div>
-
-                        <div class="d-flex">
-                            <input type="checkbox" name="payment3" id="upi" value="upi" class="cardDetails" <?php if(isset($id) && in_array("upi", $paymentmethod)) echo ' checked'; ?>>
-                            <label for="upi" class=" text-start ms-2">UPI</label>
-                        </div>
-                    </div>
-                </div>
-                <span id="paymentError" class="error-validate"></span>
-                <!-- payment-interface -->
-                <div class="paymentInterface">
-                    <!-- credit card -->
-                    <div class="credit text-center none" <?php if(isset($id) && in_array("credit", $paymentmethod)) echo ' style="display:block"';?>>
-                        <h3>Credit Card</h3>
-                        <!-- creditname -->
-                        <div class="form-group">
-                            <label for="cname" id="cnameLabel" class="col-2 text-start">Holder's Name</label>
-                            <input type="text" name="cname" id="cname" class="col-4" value="<?php if(isset($cname)) echo $cname;?>">
-                        </div>
-                        <span id="cnameError" class="error-validate"></span>
-
-                        <!-- creditcardnumber -->
-                        <div class="form-group">
-                            <label for="cnumber" id="cnumberLabel" class="col-2 text-start">Credit Card Number</label>
-                            <input type="number" name="cnumber" id="cnumber" class="col-4" value="<?php if(isset($cnumber)) echo $cnumber; ?>">
-                        </div>
-                        <span id="cnumberError" class="error-validate"></span>
-                    </div>
-
-                    <!-- debit card -->
-                    <div class="debit text-center none" <?php if(isset($id) && in_array("debit", $paymentmethod)) echo ' style="display:block"';?>>
-                        <h3>Debit Card</h3>
-                        <!-- debitname -->
-                        <div class="form-group">
-                            <label for="dname" id="dnameLabel" class="col-2 text-start">Holder's Name</label>
-                            <input type="text" name="dname" id="dname" class="col-4" value="<?php if(isset($dname)) echo $dname;?>">
-                        </div>
-                        <span id="dnameError" class="error-validate"></span>
-
-                        <!-- debitcardnumber -->
-                        <div class="form-group">
-                            <label for="dnumber" id="dnumberLabel" class="col-2 text-start">Debit Card Number</label>
-                            <input type="number" name="dnumber" id="dnumber" class="col-4" value="<?php if(isset($dnumber)) echo $dnumber; ?>">
-                        </div>
-                        <span id="dnumberError" class="error-validate"></span>
-                    </div>
-
-
-                    <!-- upi -->
-                    <div class="upi text-center none" <?php if(isset($id) && in_array("upi", $paymentmethod)) echo ' style="display:block"';?>>
-                        <h3>UPI</h3>
-                        <!-- upiname -->
-                        <div class="form-group">
-                            <label for="uname" id="unameLabel" class="col-2 text-start">Holder's Name </label>
-                            <input type="text" name="uname" id="uname" class="col-4" value="<?php if(isset($uname)) echo $uname;?>">
-                        </div>
-                        <span id="unameError" class="error-validate"></span>
-
-                        <!-- debitcardnumber -->
-                        <div class="form-group">
-                            <label for="uid" id="uidLabel" class="col-2 text-start">UPI Id </label>
-                            <input type="text" name="uid" id="uid" class="col-4" value="<?php if(isset($uid)) echo $uid; ?>">
-                        </div>
-                        <span id="uidError" class="error-validate"></span>
-                    </div>
-                </div>
-
-                <!-- Country -->
-                <div class="form-group d-flex justify-content-center">
-                    <label for="country" id="countryLabel" class="col-2 text-start">Country </label>
-                    <div class="col-4 d-flex justify-content-start">
-                        <select name="country" id="country" class="">
-                            <option value="" selected disabled>-Select Country-</option>
-                            <option value="australia" <?php if(isset($id) && $country == 'australia') echo " selected"; ?>>Australia</option>
-                            <option value="india" <?php if(isset($id) && $country == 'india') echo " selected"; ?>>India</option>
-                            <option value="japan" <?php if(isset($id) && $country == 'japan') echo " selected"; ?>>Japan</option>
-                            <option value="usa" <?php if(isset($id) && $country == 'usa') echo " selected"; ?>>USA</option>
+        <div class="container bg-dark p-5">
+            <div class="row text-center">
+                <h1 class="text-light">Our Batches</h1>
+                <div class="mt-5 row">
+                    <div class="col-2 d-flex my-auto">
+                        <select class="form-select h-25" aria-label="default select example">
+                            <option selected>2000-2005</option>
+                            <option value="1">2006-2010</option>
+                            <option value="2">2011-2015</option>
+                            <option value="3">2016-2020</option>
                         </select>
                     </div>
-                </div>
-                <span id="countryError" class="error-validate"></span>
-
-                <!-- States -->
-                <div class="form-group d-flex justify-content-center">
-                    <label for="state" id="stateLabel" class="col-2 text-start">State </label>
-
-                    
-
-                    <div class="col-4 d-flex justify-content-start">
-                        <select name="state" id="state" class="">
-                            <option value="" selected disabled>-Select State-</option>
-
-                            <?php 
-                                if(isset($id)) {
-                                    $sqlState = "select s_name from states where c_name = '$country'";
-                                    if($result = $conn->query($sqlState)){
-                                        while($row = $result->fetch_assoc()) {
-                                            if($row['s_name'] == $state) {
-                                                echo "<option value=".$row['s_name']." selected>".ucfirst($row['s_name'])."</option>";
-                                            } else {
-                                                echo "<option value=".$row['s_name']." >".ucfirst($row['s_name'])."</option>";
-                                            }
-                                        }
-                                    }
-                                }
-                            ?>
-
-                        </select>
+                    <div class="col-10">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="card">
+                                    <img src="assets/images/person-1.png" class="card-img-top" alt="Card Image">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">2000-2006</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="card">
+                                    <img src="assets/images/person-2.png" class="card-img-top" alt="Card Image">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">2001-2007</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="card">
+                                    <img src="assets/images/person-3.png" class="card-img-top" alt="Card Image">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">2002-2008</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="card">
+                                    <img src="assets/images/person-1.png" class="card-img-top" alt="Card Image">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">2003-2009</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="card">
+                                    <img src="assets/images/person-2.png" class="card-img-top" alt="Card Image">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">2004-2010</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="card">
+                                    <img src="assets/images/person-1.png" class="card-img-top" alt="Card Image">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">2005-2011</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <span id="stateError" class="error-validate"></span>
+            </div>
+        </div>
+    </section>
 
-                <!-- submit -->
-                <div class="form-group">
-                    <input type="submit" name="submit" id="submit" class="col-3">
-                    <input type="reset" name="reset" id="reset" class="col-3" onclick="resetForm()">
+    <section class="mt-5 section_toggle events" id="events">
+        <div class="container p-5">
+            <h1 class="text-center text-light">Upcoming Events : Stay Tuned</h1>
+            <div class="row mt-5">
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="assets/images/event-1.jpg" class="card-img-top" alt="Event 1">
+                        <div class="card-body">
+                            <h5 class="card-title">Event 1</h5>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra
+                                euismod odio, gravida pellentesque urna varius vitae.</p>
+                            <a href="#" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="assets/images/event-2.jpg" class="card-img-top" alt="Event 2">
+                        <div class="card-body">
+                            <h5 class="card-title">Event 2</h5>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra
+                                euismod odio, gravida pellentesque urna varius vitae.</p>
+                            <a href="#" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="assets/images/event-4.jpg" class="card-img-top" alt="Event 3">
+                        <div class="card-body">
+                            <h5 class="card-title">Event 3</h5>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra
+                                euismod odio, gravida pellentesque urna varius vitae.</p>
+                            <a href="#" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="container mt-5 section_toggle testimonials" id="testimonials">
+        <div class="p-5">
+            <div class="text-center">
+                <h1 class="heading text-light">
+                    Testimonials
+                </h1>
+            </div>
+            <div id="testimonial-carousel" class="carousel slide mt-5" data-ride="carousel">
+
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-target="#testimonial-carousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#testimonial-carousel" data-slide-to="1"></li>
+                    <li data-target="#testimonial-carousel" data-slide-to="2"></li>
+                </ol>
+
+                <!-- Slides -->
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="card testimonial-card">
+                            <div class="card-body">
+                                <div class="d-flex flex-row">
+                                    <p class="card-text">"I am proud to be a part of the JNV Jamnagar Alumni
+                                        Association.
+                                        The
+                                        community and network that this association provides is invaluable, and I have
+                                        made
+                                        lifelong friends through my involvement. The events and initiatives organized by
+                                        the
+                                        association keep us connected to our alma mater and allow us to give back to
+                                        current
+                                        students. I am grateful for the opportunities and memories that this association
+                                        has
+                                        provided me and I highly recommend it to all JNV Jamnagar alumni."
+                                    </p>
+                                    <img src="assets/images/person-1.png" alt="person-1" class="h-25 w-25">
+                                </div>
+
+                                <h4 class="card-title">John Doe</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="card testimonial-card">
+                            <div class="card-body">
+                                <div class="d-flex flex-row">
+                                    <p class="card-text">"Being a part of the JNV Jamnagar Alumni Association has been a
+                                        truly
+                                        enriching experience for me. The community of alumni is supportive and
+                                        welcoming,
+                                        and
+                                        the events and initiatives organized by the association have allowed me to stay
+                                        connected with my alma mater and give back to the school in meaningful ways. I
+                                        am
+                                        proud
+                                        to be a part of this vibrant and dynamic network and look forward to continuing
+                                        my
+                                        involvement in the future."
+                                    </p>
+                                    <img src="assets/images/person-2.png" alt="" class="h-25 w-25">
+                                </div>
+
+                                <h4 class="card-title">Jane Doe</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="card testimonial-card">
+                            <div class="card-body">
+                                <div class="d-flex flex-row">
+                                    <p class="card-text">"I am proud to be a part of the JNV Jamnagar Alumni
+                                        Association.
+                                        This
+                                        organization has not only provided me with an opportunity to reconnect with my
+                                        old
+                                        classmates, but also with a platform to give back to the community and make a
+                                        difference
+                                        in the lives of current students. The events and initiatives organized by the
+                                        Association have not only helped me to stay connected with my alma mater but
+                                        also
+                                        given
+                                        me a sense of belonging to a larger community. I highly recommend joining this
+                                        Association to all JNV alumni, as it's a wonderful way to stay connected and
+                                        make a
+                                        positive impact."
+                                    </p>
+                                    <img src="assets/images/person-3.png" alt="" class="h-25 w-25">
+                                </div>
+
+                                <h4 class="card-title">Jim Smith</h4>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-            </form>
+                <!-- Controls -->
+                <a class="carousel-control-prev" href="#testimonial-carousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#testimonial-carousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </a>
+
+            </div>
         </div>
-    </div>
+    </section>
 
-    <?php
+    <section class="mt-5 section_toggle photos" id="photos">
+        <div class="container p-5">
+            <h1 class="text-center text-light">Photo Gallery</h1>
+            <div class="row mt-5">
+                <div class="col-lg-3 col-md-4 col-6">
+                    <a href="photo1.jpg" data-toggle="lightbox" data-title="Photo 1">
+                        <img src="assets/images/slider-1.png" class="img-fluid" alt="Photo 1">
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-6">
+                    <a href="photo2.jpg" data-toggle="lightbox" data-title="Photo 2">
+                        <img src="assets/images/slider-2.png" class="img-fluid" alt="Photo 2">
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-6">
+                    <a href="photo3.jpg" data-toggle="lightbox" data-title="Photo 3">
+                        <img src="assets/images/slider-3.png" class="img-fluid" alt="Photo 3">
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-6">
+                    <a href="photo4.jpg" data-toggle="lightbox" data-title="Photo 4">
+                        <img src="assets/images/slider-4.png" class="img-fluid" alt="Photo 4">
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-6">
+                    <a href="photo5.jpg" data-toggle="lightbox" data-title="Photo 5">
+                        <img src="assets/images/slider-5.png" class="img-fluid" alt="Photo 5">
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-6">
+                    <a href="photo6.jpg" data-toggle="lightbox" data-title="Photo 6">
+                        <img src="assets/images/slider-1.png" class="img-fluid" alt="Photo 6">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        $_SESSION['flag'] = 0;
-        // session_unset();
-        // session_destroy();
 
-    ?>
+    <section class="aboutUs" id="about_us">
+        <div class="container p-5">
+            <h2 class="text-center mt-5">About Us</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <p>We are a team of dedicated professionals who are passionate about our work. Our mission is to
+                        provide high-quality services and products to our clients, while also maintaining a strong
+                        commitment to sustainability and social responsibility.</p>
+                    <p>With years of experience in the industry, we have built a reputation for excellence and are proud
+                        to have a loyal customer base. Our team is constantly striving to improve and innovate, and we
+                        are always looking for new ways to better serve our clients.</p>
+                </div>
+                <div class="col-md-4 about_us_border d-flex">
+                    <img src="assets/images/logo-small.png" class="my-5 mx-auto" alt="">
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="container mb-5">
+                            <h5 class="text-center">Contact Us</h5>
+                            <form>
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="message">Message</label>
+                                    <textarea class="form-control" id="message" rows="3"
+                                        placeholder="Enter your message"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <div class="table">
-        <table id="mytable" class="display">
-            <thead>
-                <tr>
-                    <th>
-                        Id
-                    </th>
-
-                    <th>
-                        Name
-                    </th>
-
-                    <th>
-                        Phone Number
-                    </th>
-
-                    <th>
-                        Email
-                    </th>
-
-                    <th>
-                        Gender
-                    </th>
-
-                    <th>
-                        Image
-                    </th>
-
-                    <th>
-                        Payment Methods
-                    </th>
-
-                    <th>
-                        Country
-                    </th>
-
-                    <th>
-                        State
-                    </th>
-
-                    <th>
-                        Actions
-                    </th>
-                </tr>
-
-            </thead>
-
-            <tbody id="tbody">
-
-            </tbody>
-        </table>
-    </div>
-
+    </section>
+    <script src="assets/bootstrap/js/jquery-3.6.3.min.js"></script>
+    <script src="assets/bootstrap/js/popper.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/bootstrap/script.js"></script>
+    <script src="assets/bootstrap/common.js"></script>
 </body>
-<script src="/crud_php/bootstrap/js/popper.min.js"></script>
-<script src="/crud_php/bootstrap/js/jquery-3.6.3.min.js"></script>
-<script src="/crud_php/bootstrap/js/bootstrap.min.js"></script>
-<script src="/crud_php/bootstrap/js/jquery-validate.min.js"></script>
-<script src="/crud_php/font-awesome/js/fontawesome.min.js"></script>
-<script src="/crud_php/bootstrap/js/datatable.js"></script>
-<script src="/crud_php/bootstrap/main.js"></script>
 
 </html>
-

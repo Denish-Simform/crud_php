@@ -1,19 +1,3 @@
-window.onscroll = function () { scrollFunction() };
-
-function scrollFunction() {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        document.getElementById("back-to-top-btn").style.display = "block";
-    } else {
-        document.getElementById("back-to-top-btn").style.display = "none";
-    }
-}
-
-function topFunction() {
-    document.documentElement.scrollTop = 0;
-}
-
-document.getElementById("back-to-top-btn").addEventListener("click", topFunction);
-
 let slideIndex = 1;
 showSlides(slideIndex);
 
@@ -43,30 +27,21 @@ function showSlides(n) {
 
 function scrollHide(link) {
     const collection = document.getElementsByClassName('section_toggle');
-    // let b2t = document.getElementById('back-to-top-btn');
     for (const col of collection) {
         if (link == 'home') {
             col.classList.remove("hide");
-            // b2t.classList.remove('hide');
-
         } else {
             if (!col.classList.contains(link)) {
                 col.classList.add("hide");
-                // b2t.classList.add('hide');
             }
             if (col.classList.contains(link)) {
                 col.classList.remove("hide");
-                // b2t.classList.add('hide');
             }
         }
-
-
     }
 }
 
-function register() {
-    window.location.href = "register.php";
-}
+
 
 
 
