@@ -1,5 +1,11 @@
 <?php
     session_start();
+    if(isset($_SESSION['expire']) && $_SESSION['expire'] < time()) {
+        session_unset();
+        session_destroy();
+        session_start();
+    }
+    $_SESSION['expire'] = time() + 30;
     require("config.php");
     $dirName = "assets/storedImages/";
     if(isset($_POST["submit"])) { 

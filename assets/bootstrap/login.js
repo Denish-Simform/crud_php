@@ -4,6 +4,7 @@ $(document).ready(function() {
     }
     $("#email").focusin(removeError);
     $("#password").focusin(removeError);
+    $("#captcha").focusin(removeError);
     $("#form").submit(function (event) {
         var validationFailed = false;
         var email = $("#email").val().trim().toLowerCase();
@@ -19,5 +20,13 @@ $(document).ready(function() {
         if (validationFailed) {
             event.preventDefault();
         }
+        // $.ajax({
+        //     url : "login.php",
+        //     mehtod : "POST",
+        //     data : {
+        //         email : email,
+        //         password : password
+        //     }
+        // })
     })
 });

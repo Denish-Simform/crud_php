@@ -1,5 +1,11 @@
 <?php
     session_start();
+    if(isset($_SESSION['expire']) && $_SESSION['expire'] < time()) {
+        session_unset();
+        session_destroy();
+        session_start();
+    }
+    $_SESSION['expire'] = time() + 30;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,13 +48,15 @@
                         <button type="button" class="btn btn-dark text-white" onclick="register()">Register</button>
                     </li>
                     <li class="nav-item">
-                        <button type="button" class="btn btn-dark text-white" onclick="login()"><?php 
-                            if(isset($_SESSION["id"])) {
-                                echo "Profile";
-                            } else {
-                                echo "Log In";
-                            }
-                        ?></button>
+                        <button type="button" class="btn btn-dark text-white" onclick="login()">
+                            <?php 
+                                if(isset($_COOKIE["id"]) || isset($_SESSION["id"])) {
+                                    echo "Profile";
+                                } else {
+                                    echo "Log In";
+                                    }
+                            ?>
+                        </button>
                     </li>
                 </ul>
             </div>

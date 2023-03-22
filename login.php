@@ -1,7 +1,14 @@
-<?php
+<?php 
     session_start();
+    if(isset($_SESSION['expire']) && $_SESSION['expire'] < time()) {
+        session_unset();
+        session_destroy();
+        session_start();
+    }
+    $_SESSION['expire'] = time() + 30;
     require("config.php");
-    if(isset($_SESSION["id"])) {
+
+    if(isset($_COOKIE["id"]) || isset($_SESSION["id"])) {
         header("Location: dashboard.php");
     }
 ?>
@@ -39,50 +46,86 @@
         </div>
     </nav>
     <div class="container p-5 form-wrap bg-dark text-white">
-    <?php
-        if(isset($_POST["submit"])) {
-            if(isset($_POST["email"])) {
-                $email = $_POST["email"];
-            }
-            if(isset($_POST["password"])) {
-                $password = md5($_POST["password"]);
-            }
-            $email_check = "select id from customers where email = '$email'";
-            $password_check = "select id from customers where password = '$password'";
-            $result_email_check = $conn->query($email_check);
-            if($result_email_check->num_rows > 0) {
-                $result_password_check = $conn->query($password_check);
-                if($result_password_check->num_rows > 0) {
-                    $row = $result_password_check->fetch_assoc();
-                    $_SESSION["id"] = $row["id"];
-                    header("Location: dashboard.php");
-                } else {
-                    $_SESSION["password_error"] = "Invalid Credentials";
-                }
-            } else {
-                $_SESSION["email_existance_error"] = "Email dosen't exists!";
-            }
-        }
-    ?>
         <div class="formTitle text-center">
             <h1>Log In</h1>
         </div>
         <div class="formBody text-center mt-5">
-            <form id="form" action="login.php" method="post">
+            <form id="form" action="loginaction.php" method="post">
                 <!-- email -->
                 <div class="form-group ">
                     <label for="email" id="emailLabel" class="col-2 text-start">Email</label>
-                    <input type="email" name="email" id="email" class="col-4" >
+                    <input type="email" name="email" id="email" class="col-4" 
+                        <?php 
+                            if(isset($_SESSION["email"])) { 
+                                echo "value='".$_SESSION["email"]."'";
+                                unset($_SESSION["email"]);
+                            }
+                        ?>
+                    >
                 </div>
-                <span id="emailError" class="error-validate"><?php if(isset($_SESSION["email_existance_error"])) { echo $_SESSION["email_existance_error"]; unset($_SESSION["email_existance_error"]); }?></span>
+                <span id="emailError" class="error-validate">
+                    <?php 
+                        if(isset($_SESSION["email_existance_error"])) {
+                            echo $_SESSION["email_existance_error"];
+                            unset($_SESSION["email_existance_error"]);
+                        } elseif(isset($_SESSION["blocked"])) {
+                            echo $_SESSION["blocked"];
+                            unset($_SESSION["blocked"]);
+                        }
+                    ?>
+                </span>
                 <div class="p-3"></div>
                 <!--  enter password -->
                 <div class="form-group " >   
                     <label for="password" id="passwordLabel" class="col-2 text-start ">Password</label>
-                    <input type="password" name="password" id="password" class="col-4 ">
+                    <input type="password" name="password" id="password" class="col-4"
+                        <?php 
+                            if(isset($_SESSION["password"])) { 
+                                echo "value='".$_SESSION["password"]."'";
+                                unset($_SESSION["password"]);
+                            }
+                        ?>
+                    >
                 </div>
-                <span id="passwordError" class="error-validate"><?php if(isset($_SESSION["password_error"])) { echo $_SESSION["password_error"]; unset($_SESSION["password_error"]); }?></span>
+                <span id="passwordError" class="error-validate">
+                    <?php
+                        if(isset($_SESSION["password_error"])) {
+                            echo $_SESSION["password_error"];
+                            unset($_SESSION["password_error"]);
+                        }
+                    ?>
+                </span>
+                <!--  Forget Password -->
+                <div class="forget-password">
+                    <a href="#" data-target="#pwdModal" data-toggle="modal">Forget Password?</a>
+                </div>
                 <div class="p-3"></div>
+                <!--  remember me -->
+                <div class="form-group " >   
+                    <input type="checkbox" name="remember" id="remember">
+                    <label for="remember" id="rememberLabel" class="text-start ">Remember me</label>
+                </div>
+                <div class="p-3"></div>
+                <span class="counter" id="counter">
+                    <?php 
+                        if(isset($_SESSION["counter"]) && $_SESSION["counter"] < 3) { 
+                            echo (4 - $_SESSION["counter"]) . " attempts remaining";
+                        }
+                    ?>
+                </span>
+                <?php
+                    if(isset($_SESSION["counter"]) && $_SESSION["counter"] >= 2) {
+                        echo "<div class='captcha-div mb-3'><img src='captcha.php' alt='captcha'><input type='text' name='captcha' id='captcha'></div>";
+                    }
+                ?>
+                <span id="captchaError" class="error-validate">
+                    <?php 
+                        if(isset($_SESSION["captcha_error"])) { 
+                            echo $_SESSION["captcha_error"]; 
+                            unset($_SESSION["captch_error"]); 
+                        }
+                    ?>
+                </span>
                 <!--  submit -->
                 <div class="form-group">
                     <input type="submit" name="submit" id="submit" class="col-3">
