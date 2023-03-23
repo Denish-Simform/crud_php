@@ -54,7 +54,7 @@
                                     echo "Profile";
                                 } else {
                                     echo "Log In";
-                                    }
+                                }
                             ?>
                         </button>
                     </li>

@@ -10,7 +10,12 @@
     }
     $_SESSION['expire'] = time() + 30;
     require("config.php");
-
+    function sendMail($email, $unblock_token) {
+        $message = "To unblock click the link bellow:
+        <a href='http://php.local/crud_php/unblockaction.php?email=$email&unblock_token=$unblock_token'>Unblock me</a>";
+        $subject = "To Unblock click the link bellow";
+        return mail($email, $subject, $message, "From: bhimanidenish@gmail.com");
+    }
     if(isset($_POST["submit"])) {
         if(isset($_POST["email"])) {
             $email = $_POST["email"];
@@ -51,13 +56,23 @@
                     $result = $conn->query($count_email);
                     $row_count = $result->fetch_assoc();
                     if(isset($row_count["count"]) && $row_count["count"] > 2) {
-                        $user_blocked = "update customers set status = 0 where email = '$email'";
+                        $unblock_token = bin2hex(random_bytes(16));
+                        $user_blocked = "update customers set status=0, unblock_token='$unblock_token' where email = '$email'";
                         if($conn->query($user_blocked)) {
-                            $_SESSION["blocked"] = "$email is blocked. Contact your administrator to unblock this email";
-                            unset($_SESSION["counter"]);
-                            header("Location: login.php");
-                            die();
-                        };
+                            if(sendMail($email, $unblock_token) === TRUE) {
+                                $_SESSION["blocked"] = "$email is blocked. Check your mail box to unblock this email";
+                                unset($_SESSION["counter"]);
+                                header("Location: login.php");
+                                die();
+                            } else {
+                                echo "
+                                    <script>
+                                        alert('Something went wrong. Link is not sent.');
+                                        window.location.href='login.php';
+                                    </script>               
+                                ";        
+                            }
+                        }
                     }
                     if(isset($_SESSION["counter"])) {
                         ++$_SESSION["counter"];    
@@ -74,7 +89,7 @@
                     }
                 }
             } else {
-                $_SESSION["blocked"] = "$email is blocked. Contact your administrator to unblock this email";
+                $_SESSION["blocked"] = "$email is blocked. Check your mail box to unblock this email";
                 header("Location: login.php");
             }
         } else {
@@ -82,5 +97,4 @@
             header("Location: login.php");
         }                   
     }
-    
 ?>

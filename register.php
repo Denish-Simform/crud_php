@@ -103,7 +103,7 @@
                 <div class="form-group " >   
                     <label for="password" id="passwordLabel" class="col-2 text-start ">Enter Password</label>
                     <input type="password" name="password" id="password" class="col-4 " <?php if(isset($option["id"])) echo "disabled";?>>
-                </div>
+                </div> 
                 <span id="passwordError" class="error-validate "></span>
                 <!-- confirm password -->
                 <div class="form-group ">

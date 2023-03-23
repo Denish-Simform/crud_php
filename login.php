@@ -63,6 +63,17 @@
                         ?>
                     >
                 </div>
+                <span id="unblockMessage" class="text-success">
+                    <?php 
+                        if(isset($_SESSION["unblock_message"])) {
+                            echo $_SESSION["unblock_message"];
+                            unset($_SESSION["unblock_message"]);
+                        } elseif(isset($_SESSION["link_sent"])) {
+                            echo $_SESSION["link_sent"];
+                            unset($_SESSION["link_sent"]);
+                        }
+                    ?>
+                </span>
                 <span id="emailError" class="error-validate">
                     <?php 
                         if(isset($_SESSION["email_existance_error"])) {
@@ -71,6 +82,12 @@
                         } elseif(isset($_SESSION["blocked"])) {
                             echo $_SESSION["blocked"];
                             unset($_SESSION["blocked"]);
+                        } elseif(isset($_SESSION["unblock_error"])) {
+                            echo $_SESSION["unblock_error"];
+                            unset($_SESSION["unblock_error"]);
+                        } elseif(isset($_SESSION["link_notsent"])) {
+                            echo $_SESSION["link_notsent"];
+                            unset($_SESSION["link_notsent"]);
                         }
                     ?>
                 </span>
@@ -109,12 +126,12 @@
                 <span class="counter" id="counter">
                     <?php 
                         if(isset($_SESSION["counter"]) && $_SESSION["counter"] < 3) { 
-                            echo (4 - $_SESSION["counter"]) . " attempts remaining";
+                            echo (3 - $_SESSION["counter"]) . " attempts remaining";
                         }
                     ?>
                 </span>
                 <?php
-                    if(isset($_SESSION["counter"]) && $_SESSION["counter"] >= 2) {
+                    if(isset($_SESSION["counter"]) && $_SESSION["counter"] >= 3) {
                         echo "<div class='captcha-div mb-3'><img src='captcha.php' alt='captcha'><input type='text' name='captcha' id='captcha'></div>";
                     }
                 ?>
@@ -136,6 +153,43 @@
     <button id="back-to-top-btn" class="btn btn-primary btn-lg back-to-top">
         <i class="fas fa-arrow-up"></i>
     </button>
+    <!--modal-->
+    <div id="pwdModal" class="modal fade text-dark" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="p-1">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h1 class="text-center">Reset Password</h1>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="text-center">                          
+                                    <p>If you have forgotten your password you can reset it here.</p>
+                                    <div class="panel-body">
+                                        <form action="resetpasswordaction.php" method="post" id="resetform">
+                                            <fieldset>
+                                                <div class="form-group">
+                                                    <input class="form-control input-lg" placeholder="E-mail Address" name="resetemail" type="email" id='resetemail'>
+                                                </div>
+                                                <input class="btn btn-lg btn-primary btn-block" value="Send Mail" type="button" onclick='sendMail()'>
+                                            </fieldset>                
+                                        </form>
+                                    </div>                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-12">
+                    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    </div>	
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <script src="/crud_php/assets/bootstrap/js/popper.min.js"></script>
 <script src="/crud_php/assets/bootstrap/js/jquery-3.6.3.min.js"></script>

@@ -8,7 +8,6 @@
     if(isset($_COOKIE["id"])) {
         unset($_COOKIE["id"]);
         setcookie("id", "", time()-1800);
-        // session_destroy();
     }
     if(isset($_SESSION["id"])) {
         unset($_SESSION["id"]);
