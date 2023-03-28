@@ -74,7 +74,7 @@
             unset($_SESSION['dataArr']);
         }
     ?>
-    <div class="container p-5 form-wrap bg-dark text-white">
+    <div class="container p-5 form-wrap bg-dark text-white border border-light rounded">
         <div class="formTitle text-center">
             <h1>Registration</h1>
         </div>
@@ -272,7 +272,25 @@
             </form>
         </div>
     </div>
-    <div class="table bg-dark text-white">
+    <div class="bg-dark text-white">
+        <div class="container text-center p-5 border border-light rounded mt-5 mb-5">
+            <h1>Bulk Registration</h1>
+            <form action="insertCSV.php" method="post" id="formCSV" class="mt-5" enctype="multipart/form-data">
+                <div id="autoLoadCSV" class="form-group">
+                    <label for="inputCSV" class="col-2 text-start ">Upload CSV file</label>
+                    <input type="file" id="inputCSV" name="inputCSV" class="col-4" accept=".csv">
+                    <button type="submit" name="csvSubmit" class="btn-primary" id="csvSubmit">Upload</button>
+                </div>
+                <span id="inputCSVError" class="error-validate">
+                    <?php 
+                        if(isset($_SESSION["CSVerror"])) {
+                            echo $_SESSION["CSVerror"];
+                            unset($_SESSION["CSVerror"]);
+                        }
+                    ?>
+                </span>
+            </form>    
+        </div>
         <table id="mytable" class="display">
             <thead>
                 <tr>

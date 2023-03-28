@@ -116,6 +116,8 @@ $(document).ready(function () {
             $("#cnfpasswordError").html("");
         }
     })
+
+    $("#inputCSV").change(removeError);
     $("#name").focusin(removeError);
     $("#phone").focusin(removeError);
     $("#email").focusin(removeError);

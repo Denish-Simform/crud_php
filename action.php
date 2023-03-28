@@ -93,7 +93,6 @@
             $insert = "insert into customers (name, phone, email, password, gender, paymentmethod, paymentinfo, country, state) value ('$name', $phone, '$email', '$password', '$gender', '$paymentOption', '$paymentInfo', '$country', '$state') "; // insert data into customers 
             if($conn->query($insert) === TRUE){
                 echo "Data inserted successfully";
-                // header("Location:register.php");
             } else {
                 echo $conn->error;
             }
@@ -102,7 +101,6 @@
             $update = "update customers set name = '$name', phone = $phone, email = '$email', paymentmethod = '$paymentOption', paymentinfo = '$paymentInfo', gender = '$gender', country = '$country', state = '$state' where id = $id";
             if($conn->query($update) === TRUE) {
                 echo "Data updated successfully";
-                // header("Location:register.php");
             } else {
                 echo $conn->error;
             }
