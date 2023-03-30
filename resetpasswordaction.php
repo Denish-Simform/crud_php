@@ -1,11 +1,4 @@
 <?php
-    session_start();
-    if(isset($_SESSION['expire']) && $_SESSION['expire'] < time()) {
-        session_unset();
-        session_destroy();
-        session_start();
-    }
-    $_SESSION['expire'] = time() + 30;
     require("config.php");
     function sendMail($email, $reset_token) {
         $message = "we got a request form you to reset Password! <br>Click the link bellow: <br>

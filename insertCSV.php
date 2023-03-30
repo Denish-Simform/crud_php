@@ -1,15 +1,9 @@
 <?php
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-    session_start();
-    if(isset($_SESSION['expire']) && $_SESSION['expire'] < time()) {
-        session_unset();
-        session_destroy();
-        session_start();
-    }
-    $_SESSION['expire'] = time() + 30;
     require("config.php");
+    function validationError() {
+        header("Location: register.php");
+        die();
+    }
     if(isset($_POST["csvSubmit"])) {
         if(count(array_filter($_FILES["inputCSV"])) > 1) {
             $file = $_FILES["inputCSV"]["tmp_name"];
@@ -21,16 +15,14 @@
             $dataArr = [];
             $storedEmail = [];
             while($row = fgetcsv($f)) {
-                $lineNumber ++;
+                $lineNumber++;
                 if(!preg_match("/[A-Za-z]{4,}/",$row[0])) {
                     $_SESSION["CSVerror"] = "Invalid name at line " . $lineNumber  ;
-                    header("Location: register.php");
-                    die();
+                    validationError();
                 }
                 if(!preg_match("/[0-9]{10}/",$row[1])) {
                     $_SESSION["CSVerror"] = "Invalid phone number at line " . $lineNumber  ;
-                    header("Location: register.php");
-                    die();
+                    validationError();
                 }
                 if(!in_array($row[2], $storedEmail)) {
                     if(preg_match("/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/",$row[2])) {
@@ -38,88 +30,70 @@
                         $result = $conn->query($email_check);
                         if($result->num_rows > 0) {
                             $_SESSION["CSVerror"] = "$row[2] email address exist in database";
-                            header("Location: register.php");
-                            die();
+                            validationError();
                         } else {
                             array_push($storedEmail, $row[2]);
                         }
                     } else {
                         $_SESSION["CSVerror"] = "Invalid email at line " . $lineNumber  ;
-                        header("Location: register.php");
-                        die();
+                        validationError();
                     }
                 } else {
                     $_SESSION["CSVerror"] = "Duplicate email exist in CSV at line " . $lineNumber  ;
-                    header("Location: register.php");
-                    die();
+                    validationError();
                 }
                 if(!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/",$row[3])) {
                     $_SESSION["CSVerror"] = "Invalid password at line " . $lineNumber  ;
-                    header("Location: register.php");
-                    die();
+                    validationError();
+                } else {
+                    $row[3] = md5($row[3]);
                 }
                 if(!preg_match("/Male|male|Female|female/",$row[4])) {
                     $_SESSION["CSVerror"] = "Invalid Gender at line " . $lineNumber  ;
-                    header("Location: register.php");
-                    die();
+                    validationError();
+                } else {
+                    $row[4] = strtolower($row[4]);
                 }
                 if(!isset($row[5])) {
                     $_SESSION["CSVerror"] = "Null encountered at line " . $lineNumber  ;
-                    header("Location: register.php");
-                    die();
+                    validationError();
                 }
                 if(!isset($row[6])) {
                     $_SESSION["CSVerror"] = "Null encountered at line " . $lineNumber  ;
-                    header("Location: register.php");
-                    die();
+                    validationError();
+                } else {
+                    $row[6] = strtolower(str_ireplace("card", "", $row[6]));
                 }
                 if(!isset($row[7])) {
                     $_SESSION["CSVerror"] = "Null encountered at line " . $lineNumber  ;
-                    header("Location: register.php");
-                    die();
-                } 
+                    validationError();
+                } else {
+                    $row[7] = strtolower($row[7]);
+                }
                 if(!isset($row[8])) {
                     $_SESSION["CSVerror"] = "Null encountered at line " . $lineNumber  ;
-                    header("Location: register.php");
-                    die();
+                    validationError();
+                } else {    
+                    $row[8] = strtolower($row[8]);
                 }
                 if(!isset($row[9])) {
                     $_SESSION["CSVerror"] = "Null encountered at line " . $lineNumber  ;
-                    header("Location: register.php");
-                    die();
+                    validationError();
+                } else {
+                    $row[9] = strtolower($row[9]);
+                    $row[9] = ($row[9] == "active") ? 1 : 0;
                 }
+                $dataArr[] = array($row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8], $row[9]);
             }
-            rewind($f);
-            while ($row = fgetcsv($f)) {
-                $dataArr[0] = $row[0];
-                $dataArr[1] = $row[1];
-                $dataArr[2] = $row[2];
-                $dataArr[3] = md5($row[3]);
-                $dataArr[4] = strtolower($row[4]);
-                $dataArr[5] = $row[5];
-                $paymentMethod = explode(",", $row[6]);
-                $method = [];
-                foreach($paymentMethod as $mode) {
-                    if(stripos($mode, "card") > 1) {
-                        array_push($method, strtolower(substr(trim($mode), 0, -5)));
+            foreach($dataArr as $data) {
+                if(isset($data)) {
+                    $sql = "insert into customers (name, phone, email, password, gender, paymentinfo, paymentmethod, country, state, status) value ('$data[0]', $data[1], '$data[2]', '$data[3]', '$data[4]', '$data[5]', '$data[6]', '$data[7]', '$data[8]', $data[9])";
+                    if($conn->query($sql)) {
+                        echo "row inserted";
+                        header("Location: register.php");
                     } else {
-                        array_push($method, strtolower(trim($mode)));
+                        die("error");
                     }
-                }
-                $dataArr[6] = implode(",", $method);
-                $dataArr[7] = strtolower($row[7]);
-                $dataArr[8] = strtolower($row[8]);
-                if($row[9] == "active" || $row[9] == "Active") {
-                    $dataArr[9] = 1; 
-                } else {
-                    $dataArr[9] = 0; 
-                }
-                $sql = "insert into customers (name, phone, email, password, gender, paymentinfo, paymentmethod, country, state, status) value ('$dataArr[0]', $dataArr[1], '$dataArr[2]', '$dataArr[3]', '$dataArr[4]', '$dataArr[5]', '$dataArr[6]', '$dataArr[7]', '$dataArr[8]', $dataArr[9])";
-                if($conn->query($sql)) {
-                    echo "row inserted";
-                    header("Location: register.php");
-                } else {
-                    die("error");
                 }
             }
             fclose($f);

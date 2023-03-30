@@ -1,14 +1,4 @@
 <?php
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-    session_start();
-    if(isset($_SESSION['expire']) && $_SESSION['expire'] < time()) {
-        session_unset();
-        session_destroy();
-        session_start();
-    }
-    $_SESSION['expire'] = time() + 30;
     require("config.php");
     function sendMail($email, $unblock_token) {
         $message = "To unblock click the link bellow:
@@ -24,7 +14,7 @@
             $password = md5($_POST["password"]);
         }
         $_SESSION["email"] = $email; 
-        $_SESSION["password"] = "";
+        // $_SESSION["password"] = "";
         if(isset($_POST["captcha"]) && isset($_SESSION["CAPTCHA_CODE"])) {
             $captcha =  filter_var($_POST["captcha"], FILTER_SANITIZE_STRING);
             if($captcha != $_SESSION["CAPTCHA_CODE"]) {
@@ -40,10 +30,9 @@
             if($row['status'] != 0) {
                 $id = $row['id'];
                 if($password == $row['password']) {
+                    $_SESSION["id"] = $id;
                     if(isset($_POST["remember"])) {
-                        setcookie("id", $row["id"], time()+(30 * 60));
-                    } else {
-                        $_SESSION["id"] = $row["id"];
+                        setcookie("id", $id, time()+(30 * 60 * 60 * 60));
                     }
                     $clear_log = "delete from log where id = '$id'";
                     if($conn->query($clear_log)) {

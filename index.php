@@ -50,7 +50,7 @@
                     <li class="nav-item">
                         <button type="button" class="btn btn-dark text-white" onclick="login()">
                             <?php 
-                                if(isset($_COOKIE["id"]) || isset($_SESSION["id"])) {
+                                if(isset($_SESSION["id"])) {
                                     echo "Profile";
                                 } else {
                                     echo "Log In";

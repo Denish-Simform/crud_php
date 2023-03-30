@@ -1,21 +1,10 @@
 <?php
-    // var_dump(session_get_cookie_params());
-    session_start();
-    if(isset($_SESSION['expire']) && $_SESSION['expire'] < time()) {
-        session_unset();
-        session_destroy();
-        session_start();
-    }
-    $_SESSION['expire'] = time() + 30;
     require("config.php");
+    if(isset($_COOKIE["id"])) {
+        $_SESSION["id"] = $_COOKIE["id"];
+    }
     if(isset($_SESSION["id"])) {
         $id = $_SESSION["id"];
-    } elseif(isset($_COOKIE["id"])) {
-        echo "here";
-        $id = $_COOKIE["id"];
-    }
-    if(isset($id)) {
-        // $id = $_SESSION["id"];
         $get_data = "select c.id, c.name, c.phone, c.email, c.gender, c.paymentmethod, c.paymentinfo, c.country, c.state, GROUP_CONCAT(i.imagename) AS image 
         from customers c
         join customerimages i on c.id = i.cid

@@ -1,11 +1,4 @@
 <?php
-    session_start();
-    if(isset($_SESSION['expire']) && $_SESSION['expire'] < time()) {
-        session_unset();
-        session_destroy();
-        session_start();
-    }
-    $_SESSION['expire'] = time() + 30;
     require("config.php");
 ?>
 <!DOCTYPE html>
@@ -37,7 +30,7 @@
                     <li class="nav-item">
                         <button type="button" class="btn btn-dark text-white" onclick="login()">
                             <?php 
-                                if(isset($_COOKIE["id"]) || isset($_SESSION["id"])) {
+                                if(isset($_SESSION["id"])) {
                                     echo "Profile";
                                 } else {
                                     echo "Log In";
@@ -51,23 +44,20 @@
     </nav>
     <?php
         if(isset($_GET["id"])) {   
-            $id = $_GET["id"];
-            $sql = "select c.id, c.name, c.phone, c.email, c.gender, c.paymentmethod, c.paymentinfo, c.country, c.state, GROUP_CONCAT(i.imagename) AS image 
-            from customers c
-            join customerimages i on c.id = i.cid
-            where c.id = $id";
-            $dataArray = array();
-            $result = $conn->query($sql);
-            if($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-            }
-        }
-        if(isset($_GET["id"])) {
             if(isset($_SESSION["dataArr"])) {
                 $option = $_SESSION["dataArr"];
                 unset($_SESSION['dataArr']);
             } else {
-                $option = $row;
+                $id = $_GET["id"];
+                $sql = "select c.id, c.name, c.phone, c.email, c.gender, c.paymentmethod, c.paymentinfo, c.country, c.state, GROUP_CONCAT(i.imagename) AS image 
+                from customers c
+                join customerimages i on c.id = i.cid
+                where c.id = $id";
+                $dataArray = array();
+                $result = $conn->query($sql);
+                if($result->num_rows > 0) {
+                    $option = $result->fetch_assoc();
+                }
             }
         } elseif(isset($_SESSION["dataArr"])) {
             $option = $_SESSION["dataArr"];

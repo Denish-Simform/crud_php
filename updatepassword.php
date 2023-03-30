@@ -1,11 +1,4 @@
 <?php
-    session_start();
-    if(isset($_SESSION['expire']) && $_SESSION['expire'] < time()) {
-        session_unset();
-        session_destroy();
-        session_start();
-    }
-    $_SESSION['expire'] = time() + 30;
     require("config.php");
     if(isset($_GET["email"]) && $_GET["reset_token"]) {
         date_default_timezone_set('Asia/kolkata');

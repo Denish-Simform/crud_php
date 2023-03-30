@@ -1,11 +1,4 @@
 <?php 
-    session_start();
-    if(isset($_SESSION['expire']) && $_SESSION['expire'] < time()) {
-        session_unset();
-        session_destroy();
-        session_start();
-    }
-    $_SESSION['expire'] = time() + 30;
     require("config.php");
 
     if(isset($_COOKIE["id"]) || isset($_SESSION["id"])) {
@@ -97,10 +90,10 @@
                     <label for="password" id="passwordLabel" class="col-2 text-start ">Password</label>
                     <input type="password" name="password" id="password" class="col-4"
                         <?php 
-                            if(isset($_SESSION["password"])) { 
-                                echo "value='".$_SESSION["password"]."'";
-                                unset($_SESSION["password"]);
-                            }
+                            // if(isset($_SESSION["password"])) { 
+                            //     echo "value='".$_SESSION["password"]."'";
+                            //     unset($_SESSION["password"]);
+                            // }
                         ?>
                     >
                 </div>
