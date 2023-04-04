@@ -88,14 +88,7 @@
                 <!--  enter password -->
                 <div class="form-group " >   
                     <label for="password" id="passwordLabel" class="col-2 text-start ">Password</label>
-                    <input type="password" name="password" id="password" class="col-4"
-                        <?php 
-                            // if(isset($_SESSION["password"])) { 
-                            //     echo "value='".$_SESSION["password"]."'";
-                            //     unset($_SESSION["password"]);
-                            // }
-                        ?>
-                    >
+                    <input type="password" name="password" id="password" class="col-4">
                 </div>
                 <span id="passwordError" class="error-validate">
                     <?php
