@@ -150,6 +150,34 @@
             </div>
         </div>
     </div>
+
+    <div class="container text-center p-5 border border-light rounded mt-5 mb-5">
+            <h1>Upload photos into AWS</h1>
+            <form action="uploadintoAWS.php " method="post" id="form-aws-images" class="mt-5" enctype="multipart/form-data"> <!--uploadintoAWS.php -->
+                <div id="autoLoadCSV" class="form-group">
+                    <input type="hidden" id="jwtToken" name="jwtToken" value="<?php if(isset($_COOKIE['token'])) echo $_COOKIE['token']; ?>">
+                    <label for="awsImages" class="col-2 text-start ">Upload CSV file</label>
+                    <input type="file" id="awsImages" name="awsImages" class="col-4" >
+                    <button type="submit" name="upload" class="btn-primary" id="upload">Upload</button>
+                </div>
+                <span id="inputAWSError" class="error-validate">
+                    <?php 
+                        if(isset($_SESSION["AWSerror"])) {
+                            echo $_SESSION["AWSerror"];
+                            unset($_SESSION["AWSerror"]);
+                        }
+                    ?>
+                </span>
+                <span id="AWSsuccess" class="text-success">
+                    <?php 
+                        if(isset($_SESSION["AWSsuccess"])) {
+                            echo $_SESSION["AWSsuccess"];
+                            unset($_SESSION["AWSsuccess"]);
+                        }
+                    ?>
+                </span>
+            </form>    
+        </div>
     <button id="back-to-top-btn" class="btn btn-primary btn-lg back-to-top">
         <i class="fas fa-arrow-up"></i>
     </button>
