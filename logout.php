@@ -9,6 +9,10 @@
         unset($_COOKIE["id"]);
         setcookie("id", "", time()-1800);
     }
+    if(isset($_COOKIE["token"])) {
+        unset($_COOKIE["token"]);
+        setcookie("token", "", time()-1800);
+    }
     if(isset($_SESSION["id"])) {
         unset($_SESSION["id"]);
         session_destroy();

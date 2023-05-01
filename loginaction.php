@@ -1,5 +1,6 @@
 <?php
     require("config.php");
+    require("jwt.php");
     function sendMail($email, $unblock_token) {
         $message = "To unblock click the link bellow:
         <a href='http://php.local/crud_php/unblockaction.php?email=$email&unblock_token=$unblock_token'>Unblock me</a>";
@@ -14,7 +15,6 @@
             $password = md5($_POST["password"]);
         }
         $_SESSION["email"] = $email; 
-        // $_SESSION["password"] = "";
         if(isset($_POST["captcha"]) && isset($_SESSION["CAPTCHA_CODE"])) {
             $captcha =  filter_var($_POST["captcha"], FILTER_SANITIZE_STRING);
             if($captcha != $_SESSION["CAPTCHA_CODE"]) {
@@ -31,8 +31,12 @@
                 $id = $row['id'];
                 if($password == $row['password']) {
                     $_SESSION["id"] = $id;
+                    $headers = array('alg'=>'HS256', 'typ'=>'JWT');
+		            $payload = array('id'=>$id, 'exp'=>(time()+60*30));
+		            $jwt = generate_jwt($headers, $payload);
+                    setcookie("token", $jwt, time()+(30*60));
                     if(isset($_POST["remember"])) {
-                        setcookie("id", $id, time()+(30 * 60 * 60 * 60));
+                        setcookie("id", $id, time()+(30*60*60*60));
                     }
                     $clear_log = "delete from log where id = '$id'";
                     if($conn->query($clear_log)) {
@@ -84,6 +88,6 @@
         } else {
             $_SESSION["email_existance_error"] = "Email dosen't exists!";
             header("Location: login.php");
-        }                   
+        }       
     }
 ?>
