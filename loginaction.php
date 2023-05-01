@@ -31,12 +31,12 @@
                 $id = $row['id'];
                 if($password == $row['password']) {
                     $_SESSION["id"] = $id;
-                    $headers = array('alg'=>'HS256','typ'=>'JWT');
-		            $payload = array('id'=>$id, 'exp'=>(time() + 60 * 30));
+                    $headers = array('alg'=>'HS256', 'typ'=>'JWT');
+		            $payload = array('id'=>$id, 'exp'=>(time()+60*30));
 		            $jwt = generate_jwt($headers, $payload);
-                    setcookie("token", $jwt, time()+(30 * 60));
+                    setcookie("token", $jwt, time()+(30*60));
                     if(isset($_POST["remember"])) {
-                        setcookie("id", $id, time()+(30 * 60 * 60 * 60));
+                        setcookie("id", $id, time()+(30*60*60*60));
                     }
                     $clear_log = "delete from log where id = '$id'";
                     if($conn->query($clear_log)) {
@@ -88,7 +88,6 @@
         } else {
             $_SESSION["email_existance_error"] = "Email dosen't exists!";
             header("Location: login.php");
-        } 
-        
+        }       
     }
 ?>

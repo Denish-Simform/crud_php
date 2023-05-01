@@ -21,11 +21,6 @@
                 if(move_uploaded_file($tmpname, $folder . $imagename)){
                     $bucket = 'crud-customer-images';
                     $filePath = __DIR__ . '/'. $folder . $imagename;
-                    echo "<br>";
-                    echo "<br>";
-                    var_dump($filePath);
-                    echo "<br>";
-                    echo "<br>";
                     $key = basename($filePath);
                     try {
                         $result = $s3Client->putObject([
